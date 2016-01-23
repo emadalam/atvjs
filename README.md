@@ -1,2 +1,3 @@
 # atvjs
-Apple TV JavaScript development sdk using TVML and TVJS
+Blazing fast Apple TV application development using pure JavaScript.
+
