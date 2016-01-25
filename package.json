@@ -1,7 +1,7 @@
 {
   "name": "atvjs",
   "version": "0.0.1",
-  "description": "Apple TV JavaScript development sdk using TVML and TVJS.",
+  "description": "Blazing fast Apple TV application development using pure JavaScript.",
   "keywords": [
     "atvjs",
     "appletv",
