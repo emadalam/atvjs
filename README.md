@@ -433,7 +433,7 @@ You can find a port of the original TVML Catalog sample code [re-written using a
 
 - Apple TV Development - [tvOS](https://developer.apple.com/tvos/), [TVJS](https://developer.apple.com/library/tvos/documentation/TVMLJS/Reference/TVJSFrameworkReference/index.html) and [TVML](https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/index.html)
 - Building tvOS Applications - [Tutorial 1](http://josecasanova.com/blog/how-to-build-a-tvos-application-for-apple-tv-tutorial/) and [Tutorial 2](http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial)
- - [JavaScript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+- [JavaScript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 - [ES6 Features](http://es6-features.org)
 - [Babel](https://babeljs.io/)
 
