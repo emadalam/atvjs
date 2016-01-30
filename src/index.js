@@ -28,6 +28,11 @@ let started = false;
 // all libraries
 let libs = {
     /**
+     * Internal alias to lodash library
+     * @type {lodash}
+     */
+    _: _,
+    /**
      * Ajax wrapper using Promises
      * @type {./ajax.js}
      */

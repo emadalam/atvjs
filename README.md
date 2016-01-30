@@ -1,13 +1,11 @@
 # atvjs
 Blazing fast Apple TV application development using pure JavaScript.
 
-<!-- MarkdownTOC depth=0 autolink=true autoanchor=true bracket=round -->
+<!-- MarkdownTOC depth=4 autolink=true autoanchor=true bracket=round -->
 
 - [Philosophy](#philosophy)
-	- [What?](#what)
-	- [Why?](#why)
-	- [How?](#how)
 - [What's included](#whats-included)
+- [Getting Started](#getting-started)
 - [Basic Examples](#basic-examples)
 	- [Creating Pages](#creating-pages)
 	- [Adding TVML styles to your page](#adding-tvml-styles-to-your-page)
@@ -18,6 +16,7 @@ Blazing fast Apple TV application development using pure JavaScript.
 	- [Custom options while navigation](#custom-options-while-navigation)
 	- [Creating Menu Page](#creating-menu-page)
 	- [Application initialization using configuration](#application-initialization-using-configuration)
+- [Sample Code](#sample-code)
 - [Useful Links](#useful-links)
 - [Contributions](#contributions)
 - [License](#license)
@@ -27,16 +26,13 @@ Blazing fast Apple TV application development using pure JavaScript.
 <a name="philosophy"></a>
 ### Philosophy
 
-<a name="what"></a>
-#### What?
+##### What?
 This is a super simple framework for blazing fast [Apple TV](https://developer.apple.com/tvos/) application development using pure JavaScript. It relies on the [tvOS](https://developer.apple.com/tvos/) provided [TVML](https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/) and [TVJS](https://developer.apple.com/library/prerelease/tvos/documentation/TVMLJS/Reference/TVJSFrameworkReference/) for [Apple TV development](https://developer.apple.com/library/tvos/documentation/General/Conceptual/AppleTV_PG/). However this framework does most of the heavy lifting for you and lets you concentrate on your application logic without worrying about the hassles of complicated architecture for Apple TV development. Build your Apple TV application the same way how you are used to building your SPA applications in JavaScript and let the framework handle the rest for you.
 
-<a name="why"></a>
-#### Why?
+##### Why?
 The existing application architecture and sample code provided by apple for building the Apple TV applications using TVML and TVJS appears to be very immature (no offense Apple) and feels more like the web applications of the 90s where each of the page loads separately by sending the request to the back-end which generates your application page markup based on the user interaction and sends the new page back to the browser. This is okay if we were still in the 90s but feels so dumb in this era where we are used to building SPAs with REST APIs and back-end is used just as a data interaction point. Here comes *atvjs* that bridges the gap and lets you use the same architecture that, we as front-end developers, have embraced over the years.
 
-<a name="how"></a>
-#### How?
+##### How?
 You simply create your pages (views) by passing a bunch of configurations (name of the page, template function, url etc) with your desired data (you can either populate data manually using your own ajax requests or pass a url configuration to fetch data from your server). Once the page is created, it is uniquely identifiable using the name. You can navigate to your page anytime in your application using the same name.
 
 <a name="whats-included"></a>
@@ -45,12 +41,47 @@ You simply create your pages (views) by passing a bunch of configurations (name 
 - TVML styling capabilities (both global as well as individual page level)
 - Event handling (both global and for individual pages and elements)
 - Application level persistent data storage using localStorage `ATV.Settings.set`,  `ATV.Settings.get`, `ATV.Settings.remove`
-- AJAX library using JavaScript Promises `ATV.AJAX`, `ATV.AJAX.get`, `ATV.AJAX.post`, `ATV.AJAX.put`, `ATV.AJAX.del`
+- Ajax library using JavaScript Promises `ATV.Ajax`, `ATV.Ajax.get`, `ATV.Ajax.post`, `ATV.Ajax.put`, `ATV.Ajax.del`
 - Application level publish/subscribe using [PubSubJS](https://github.com/mroderick/PubSubJS) `ATV.subscribe`, `ATV.publish`, `ATV.unsubscribe`
 - Application initialization/reload using simple configurations `ATV.start`, `ATV.reload`
 - Global error handling
-- JavaScript `Promise` and other ES6 Features [Polyfill using babel](https://babeljs.io/docs/usage/polyfill/)
-- [lodash](https://lodash.com/) library
+- JavaScript `Promise` and other ES6 Features Polyfill using [babel](https://babeljs.io/docs/usage/polyfill/)
+- [lodash](https://lodash.com/) library as `ATV._`
+
+<a name="getting-started"></a>
+### Getting Started
+`atvjs` is defined as a `UMD` and available as an [npm package](https://www.npmjs.com/package/atvjs). You can either import it as a dependency or download it independently and include in your project.
+
+```
+$ npm install --save atvjs
+```
+
+You'll then be able to use it as a dependency with your favorite module system.
+
+```javascript
+import ATV from 'atvjs';
+// or
+var ATV = require('atvjs');
+```
+
+Or if you have downloaded a copy of `atvjs`, pull the script inside your application after launch.
+
+```javascript
+function onEvaluate(success) {
+	if (!success) {
+		// application failed to load
+	}
+}
+
+App.onLaunch = function(options) {
+	var baseurl = options.BASEURL;
+	App.launchOptions = options;
+	evaluateScripts([`${baseurl}atv.min.js`, `${baseurl}app.js`], onEvaluate);
+};
+
+// then in your app.js you will have the instance of ATV library available
+// you can contain your entire application code inside app.js
+```
 
 <a name="basic-examples"></a>
 ### Basic Examples
@@ -76,7 +107,7 @@ ATV.Page.create({
 	// or a data function that returns the data
 	data: {
 		title: 'Homepage',
-		message: 'This is my super awesome homepage created using atvjs.'
+		description: 'This is my super awesome homepage created using atvjs.'
 	}
 });
 
@@ -214,7 +245,7 @@ ATV.Page.create({
 		// perform ajax to get the data
 		// the ajax method in the library returns an instance of the Promise object
 		ATV
-			.AJAX
+			.Ajax
 			.post('someURL', {data: data})
 			.then((xhr) => {
 				// xhr succeeded
@@ -385,8 +416,6 @@ ATV.start({
 		}
 	},
 	onLaunch(options) {
-		// clear navigation stack
-		ATV.Navigation.clear();
 		// navigate to menu page
 		ATV.Navigation.navigateToMenuPage();
 		// or you can navigate to previously created page
@@ -395,23 +424,25 @@ ATV.start({
 });
 ```
 
+<a name="sample-code"></a>
+### Sample Code
+You can find a port of the original TVML Catalog sample code [re-written using atvjs](https://github.com/emadalam/tvml-catalog-using-atvjs).
+
 <a name="useful-links"></a>
 ### Useful Links
 
-- Apple TV Development
-	- [tvOS](https://developer.apple.com/tvos/)
-	- [TVJS](https://developer.apple.com/library/tvos/documentation/TVMLJS/Reference/TVJSFrameworkReference/index.html)
-	- [TVML](https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/index.html)
-	- [Building tvOS Applications - Tutorial 1](http://josecasanova.com/blog/how-to-build-a-tvos-application-for-apple-tv-tutorial/)
-	- [Building tvOS Applications - Tutorial 2](http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial)
-- General
- 	- [JavaScript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-	- [ES6 Features](http://es6-features.org)
-	- [Babel](https://babeljs.io/)
+- Apple TV Development - [tvOS](https://developer.apple.com/tvos/), [TVJS](https://developer.apple.com/library/tvos/documentation/TVMLJS/Reference/TVJSFrameworkReference/index.html) and [TVML](https://developer.apple.com/library/prerelease/tvos/documentation/LanguagesUtilities/Conceptual/ATV_Template_Guide/index.html)
+- Building tvOS Applications - [Tutorial 1](http://josecasanova.com/blog/how-to-build-a-tvos-application-for-apple-tv-tutorial/) and [Tutorial 2](http://www.raywenderlich.com/114886/beginning-tvos-development-with-tvml-tutorial)
+ - [JavaScript Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+- [ES6 Features](http://es6-features.org)
+- [Babel](https://babeljs.io/)
 
 <a name="contributions"></a>
 ### Contributions
-It was a hurried development process as we planned to launch our Apple TV application in a span of less than two months, with only a single full-time developer (that happened to be me) working on the project, this framework was a byproduct of the application. It is still in its very early stages and there might be few bugs and issues with it, with a huge scope of improvement. Please feel free to contribute and enhance this framework with bug-fixes and features.
+
+- Fork the project
+- Commit your enhancements and bug fixes
+- Create a pull request describing the changes
 
 <a name="license"></a>
 ### License

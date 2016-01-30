@@ -118,6 +118,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	// all libraries
 	var libs = {
 	  /**
+	   * Internal alias to lodash library
+	   * @type {lodash}
+	   */
+	  _: _lodash2.default,
+	  /**
 	   * Ajax wrapper using Promises
 	   * @type {./ajax.js}
 	   */
