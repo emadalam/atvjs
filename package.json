@@ -1,6 +1,6 @@
 {
   "name": "atvjs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Blazing fast Apple TV application development using pure JavaScript.",
   "keywords": [
     "atvjs",
