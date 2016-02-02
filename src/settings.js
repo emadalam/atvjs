@@ -9,11 +9,14 @@ const lib = {
 	 * @param {Object|String} val 		The value to store
 	 */
 	set(key, val) {
-		if (_.isPlainObject(val)) {
+		// convert all values to string for proper compression
+		if (!_.isUndefined(val)) {
 			val = JSON.stringify(val);
+			console.log(`Setting key: ${key} with value: ${val}`);
+			localStorage.setItem(key, LZString.compress(val));
+		} else {
+			this.remove(key);
 		}
-		console.log(`Setting key: ${key} with value: ${val}`);
-		localStorage.setItem(key, LZString.compress(val));
 	},
 	/**
 	 * Returns a value for the specified key
@@ -22,8 +25,12 @@ const lib = {
 	 * @return {Object|String}     	The stored value
 	 */
 	get(key) {
-		let item = LZString.decompress(localStorage.getItem(key));
+		let item = localStorage.getItem(key);
 		let val;
+		
+		if (!_.isUndefined(item)) {
+			item = LZString.decompress(item);
+		}
 		try {
 			val = JSON.parse(item);
 		} catch (ex) {
@@ -40,7 +47,10 @@ const lib = {
 		if (!_.isArray(keys)) {
 			keys = [keys];
 		}
-		_.each(keys, (key) => localStorage.removeItem(key));
+		_.each(keys, (key) => {
+			console.log(`Unsetting key: ${key}`);
+			localStorage.removeItem(key);
+		});
 	}
 };
 

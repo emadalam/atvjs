@@ -20329,11 +20329,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  */
 
 		set: function set(key, val) {
-			if (_lodash2.default.isPlainObject(val)) {
+			// convert all values to string for proper compression
+			if (!_lodash2.default.isUndefined(val)) {
 				val = JSON.stringify(val);
+				console.log('Setting key: ' + key + ' with value: ' + val);
+				localStorage.setItem(key, _lzString2.default.compress(val));
+			} else {
+				this.remove(key);
 			}
-			console.log('Setting key: ' + key + ' with value: ' + val);
-			localStorage.setItem(key, _lzString2.default.compress(val));
 		},
 
 		/**
@@ -20343,8 +20346,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @return {Object|String}     	The stored value
 	  */
 		get: function get(key) {
-			var item = _lzString2.default.decompress(localStorage.getItem(key));
+			var item = localStorage.getItem(key);
 			var val = undefined;
+
+			if (!_lodash2.default.isUndefined(item)) {
+				item = _lzString2.default.decompress(item);
+			}
 			try {
 				val = JSON.parse(item);
 			} catch (ex) {
@@ -20363,7 +20370,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				keys = [keys];
 			}
 			_lodash2.default.each(keys, function (key) {
-				return localStorage.removeItem(key);
+				console.log('Unsetting key: ' + key);
+				localStorage.removeItem(key);
 			});
 		}
 	};
