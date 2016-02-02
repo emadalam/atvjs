@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import LZString from 'lz-string';
 
 const lib = {
 	/**
@@ -12,7 +13,7 @@ const lib = {
 			val = JSON.stringify(val);
 		}
 		console.log(`Setting key: ${key} with value: ${val}`);
-		localStorage.setItem(key, val);
+		localStorage.setItem(key, LZString.compress(val));
 	},
 	/**
 	 * Returns a value for the specified key
@@ -21,7 +22,7 @@ const lib = {
 	 * @return {Object|String}     	The stored value
 	 */
 	get(key) {
-		let item = localStorage.getItem(key);
+		let item = LZString.decompress(localStorage.getItem(key));
 		let val;
 		try {
 			val = JSON.parse(item);

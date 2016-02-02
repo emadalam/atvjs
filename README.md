@@ -46,7 +46,7 @@ You simply create your pages (views) by passing a bunch of configurations (name 
 - Page, Menu and Modal Creation and Navigation `ATV.Page.create`, `ATV.Menu.create`, `ATV.Navigation.navigate`, `ATV.Navigation.navigateToMenuPage`, `ATV.Navigation.presentModal`
 - TVML styling capabilities (both global as well as individual page level)
 - Event handling (both global and for individual pages and elements)
-- Application level persistent data storage using localStorage `ATV.Settings.set`,  `ATV.Settings.get`, `ATV.Settings.remove`
+- Application level persistent data storage using localStorage with [lz-string compression](https://github.com/pieroxy/lz-string/) `ATV.Settings.set`,  `ATV.Settings.get`, `ATV.Settings.remove`
 - Ajax library using JavaScript Promises `ATV.Ajax`, `ATV.Ajax.get`, `ATV.Ajax.post`, `ATV.Ajax.put`, `ATV.Ajax.del`
 - Application level publish/subscribe using [PubSubJS](https://github.com/mroderick/PubSubJS) `ATV.subscribe`, `ATV.publish`, `ATV.unsubscribe`
 - Application initialization/reload using simple configurations `ATV.start`, `ATV.reload`

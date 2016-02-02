@@ -1,8 +1,10 @@
 // include the ES6 polyfills
 import 'babel-polyfill';
 
+// external libraries
 import _ from 'lodash';
 import PubSub from 'pubsub-js';
+import LZString from 'lz-string';
 
 // internal libraries
 import Parser from './parser';
@@ -29,9 +31,14 @@ let started = false;
 let libs = {
     /**
      * Internal alias to lodash library
-     * @type {lodash}
+     * @type {https://github.com/lodash/lodash}
      */
     _: _,
+    /**
+     * Internal alias to lz-string compression library
+     * @type {https://github.com/pieroxy/lz-string/}
+     */
+    LZString: LZString,
     /**
      * Ajax wrapper using Promises
      * @type {./ajax.js}

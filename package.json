@@ -29,14 +29,14 @@
     "chai": "3.4.1",
     "del": "2.1.0",
     "gulp": "3.9.0",
-    "gulp-babel": "^6.1.1",
+    "gulp-babel": "6.1.1",
     "gulp-concat": "2.6.0",
     "gulp-connect": "2.2.0",
-    "gulp-insert": "^0.5.0",
+    "gulp-insert": "0.5.0",
     "gulp-livereload": "3.8.1",
     "gulp-load-plugins": "1.1.0",
     "gulp-size": "2.0.0",
-    "gulp-strip-debug": "^1.1.0",
+    "gulp-strip-debug": "1.1.0",
     "gulp-uglify": "1.5.1",
     "gulp-util": "3.0.7",
     "gulp-watch": "4.3.5",
@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "lodash": "3.10.1",
-    "pubsub-js": "^1.5.3"
+    "lz-string": "1.4.4",
+    "pubsub-js": "1.5.3"
   }
 }
