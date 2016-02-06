@@ -19411,25 +19411,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var ev = _e$split2[0];
 	            var selector = _e$split2[1];
 
+	            var elements = null;
 	            if (!_.isArray(fns)) {
 	                // support list of event handlers
 	                fns = [fns];
 	            }
 	            if (selector) {
 	                selector = e.substring(e.indexOf(' ') + 1); // everything after space
-	                doc = _.attempt(function () {
+	                elements = _.attempt(function () {
 	                    return doc.querySelectorAll(selector);
 	                }); // catch any errors while document selection
 	            } else {
-	                    doc = [doc];
+	                    elements = [doc];
 	                }
-	            doc = _.isError(doc) ? [] : doc;
+	            elements = _.isError(elements) ? [] : elements;
 	            _.each(fns, function (fn) {
 	                fn = _.isString(fn) ? cfg[fn] : fn; // assume the function to be present on the page configuration obeject
 	                if (_.isFunction(fn)) {
-	                    console.log((add ? 'adding' : 'removing') + ' event on documents...', ev, doc);
-	                    _.each(doc, function (d) {
-	                        return listenerFn.call(d, ev, function (e) {
+	                    console.log((add ? 'adding' : 'removing') + ' event on documents...', ev, elements);
+	                    _.each(elements, function (el) {
+	                        return listenerFn.call(el, ev, function (e) {
 	                            return fn.call(cfg, e);
 	                        });
 	                    }); // bind to the original configuration object
