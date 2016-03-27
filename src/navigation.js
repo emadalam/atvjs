@@ -67,7 +67,7 @@ function getErrorDoc(message) {
 
 /**
  * Gets the topmost document from the navigationDocument stack
- * 
+ *
  * @return {Document} The document
  */
 function getLastDocumentFromStack() {
@@ -114,7 +114,7 @@ function show(cfg = {}) {
         doc = presentModal(cfg);
     } else { // no document on the navigation stack, show as a document
         doc = Page.makeDom(cfg);
-        cleanNavigate(doc);    
+        cleanNavigate(doc);
     }
     return doc;
 }
@@ -222,7 +222,9 @@ function cleanNavigate(doc, replace = false) {
     let docs = navigationDocument.documents;
     let last = getLastDocumentFromStack();
 
-    if (!last || last !== loaderDoc || last !== errorDoc || !replace) {
+    console.log("trying to clean navigate inside cleanNavigate func");
+    if (!replace && (!last || last !== loaderDoc || last !== errorDoc )) {
+        console.log("pushed instead of replaced");
         pushDocument(doc);
     } else if (last && last === loaderDoc || last === errorDoc) { // replaces any error or loader document from the current document stack
         console.log('replacing current error/loader...');
@@ -317,6 +319,7 @@ function navigate(page, options, replace) {
                     _.defer(presentModal, doc);
                 } else { // navigate
                     // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
+                    console.log("trying to clean navigate");
                     _.defer(cleanNavigate, doc, replace);
                 }
             }
@@ -374,7 +377,7 @@ function dismissModal() {
 
 /**
  * Clears the navigation stack.
- * 
+ *
  */
 function clear() {
     loaderDoc = null;
@@ -384,7 +387,7 @@ function clear() {
 
 /**
  * Pops the recent document or pops all document before the provided document.
- * 
+ *
  * @param  {Document} [doc]     The document until which we need to pop.
  */
 function pop(doc) {
@@ -397,7 +400,7 @@ function pop(doc) {
 
 /**
  * Goes back in history.
- * 
+ *
  */
 function back() {
     if (getLastDocumentFromStack()) {
@@ -407,7 +410,7 @@ function back() {
 
 /**
  * Removes the current active document from the stack.
- * 
+ *
  */
 function removeActiveDocument() {
     let doc = getActiveDocument();
