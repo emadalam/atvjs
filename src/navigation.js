@@ -222,7 +222,6 @@ function cleanNavigate(doc, replace = false) {
     let docs = navigationDocument.documents;
     let last = getLastDocumentFromStack();
 
-    console.log("trying to clean navigate inside cleanNavigate func");
     if (!replace && (!last || last !== loaderDoc || last !== errorDoc )) {
         pushDocument(doc);
     } else if (last && last === loaderDoc || last === errorDoc) { // replaces any error or loader document from the current document stack
@@ -318,7 +317,6 @@ function navigate(page, options, replace) {
                     _.defer(presentModal, doc);
                 } else { // navigate
                     // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
-                    console.log("trying to clean navigate");
                     _.defer(cleanNavigate, doc, replace);
                 }
             }
