@@ -79,16 +79,23 @@ function getLastDocumentFromStack() {
  * Initializes the menu document if present
  *
  * @private
- * @return {[type]} [description]
  */
 function initMenu() {
     let menuCfg = defaults.menu;
 
+    // no configuration given and neither the menu created earlier
+    // no need to proceed
+    if (!menuCfg && !Menu.created) {
+        return;
+    }
+
+    // set options to create menu
     if (menuCfg) {
         Menu.setOptions(menuCfg);
-        menuDoc = Menu.get();
-        Page.prepareDom(menuDoc);
     }
+
+    menuDoc = Menu.get();
+    Page.prepareDom(menuDoc);
 }
 
 /**
@@ -222,7 +229,7 @@ function cleanNavigate(doc, replace = false) {
     let docs = navigationDocument.documents;
     let last = getLastDocumentFromStack();
 
-    if (!replace && (!last || last !== loaderDoc || last !== errorDoc )) {
+    if (!replace && (!last || last !== loaderDoc || last !== errorDoc)) {
         pushDocument(doc);
     } else if (last && last === loaderDoc || last === errorDoc) { // replaces any error or loader document from the current document stack
         console.log('replacing current error/loader...');

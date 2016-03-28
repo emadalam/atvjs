@@ -19689,16 +19689,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Initializes the menu document if present
 	 *
 	 * @private
-	 * @return {[type]} [description]
 	 */
 	function initMenu() {
 	    var menuCfg = defaults.menu;
 
+	    // no configuration given and neither the menu created earlier
+	    // no need to proceed
+	    if (!menuCfg && !_menu2.default.created) {
+	        return;
+	    }
+
+	    // set options to create menu
 	    if (menuCfg) {
 	        _menu2.default.setOptions(menuCfg);
-	        menuDoc = _menu2.default.get();
-	        _page2.default.prepareDom(menuDoc);
 	    }
+
+	    menuDoc = _menu2.default.get();
+	    _page2.default.prepareDom(menuDoc);
 	}
 
 	/**
@@ -19843,9 +19850,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var docs = navigationDocument.documents;
 	    var last = getLastDocumentFromStack();
 
-	    console.log("trying to clean navigate inside cleanNavigate func");
 	    if (!replace && (!last || last !== loaderDoc || last !== errorDoc)) {
-	        console.log("pushed instead of replaced");
 	        pushDocument(doc);
 	    } else if (last && last === loaderDoc || last === errorDoc) {
 	        // replaces any error or loader document from the current document stack
@@ -19942,7 +19947,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    // navigate
 	                    // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
-	                    console.log("trying to clean navigate");
 	                    _lodash2.default.defer(cleanNavigate, doc, replace);
 	                }
 	            }
@@ -20294,6 +20298,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 */
 	exports.default = {
+	    get created() {
+	        return created;
+	    },
+	    set created(val) {},
 	    setOptions: setOptions,
 	    create: create,
 	    get: get,

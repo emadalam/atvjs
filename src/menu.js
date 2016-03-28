@@ -146,6 +146,8 @@ function setSelectedItem(menuItemid) {
  *
  */
 export default {
+    get created() { return created; },
+    set created(val) { },
     setOptions: setOptions,
     create: create,
     get: get,
