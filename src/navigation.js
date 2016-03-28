@@ -224,7 +224,6 @@ function cleanNavigate(doc, replace = false) {
 
     console.log("trying to clean navigate inside cleanNavigate func");
     if (!replace && (!last || last !== loaderDoc || last !== errorDoc )) {
-        console.log("pushed instead of replaced");
         pushDocument(doc);
     } else if (last && last === loaderDoc || last === errorDoc) { // replaces any error or loader document from the current document stack
         console.log('replacing current error/loader...');
