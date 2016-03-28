@@ -106,6 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// all supported configurations for each of the libraries
 
+
 	// external libraries
 	var configMap = {
 	  Ajax: [],
@@ -116,6 +117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	// indicate whether the application was started
+
 
 	// internal libraries
 	// include the ES6 polyfills
@@ -18757,11 +18759,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	/**
 	 * Default options for the ajax.
 	 * 
@@ -19215,11 +19218,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var _navigation = __webpack_require__(199);
 
@@ -19674,7 +19677,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Gets the topmost document from the navigationDocument stack
-	 * 
+	 *
 	 * @return {Document} The document
 	 */
 	function getLastDocumentFromStack() {
@@ -19840,7 +19843,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var docs = navigationDocument.documents;
 	    var last = getLastDocumentFromStack();
 
-	    if (!last || last !== loaderDoc || last !== errorDoc || !replace) {
+	    console.log("trying to clean navigate inside cleanNavigate func");
+	    if (!replace && (!last || last !== loaderDoc || last !== errorDoc)) {
+	        console.log("pushed instead of replaced");
 	        pushDocument(doc);
 	    } else if (last && last === loaderDoc || last === errorDoc) {
 	        // replaces any error or loader document from the current document stack
@@ -19937,6 +19942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } else {
 	                    // navigate
 	                    // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
+	                    console.log("trying to clean navigate");
 	                    _lodash2.default.defer(cleanNavigate, doc, replace);
 	                }
 	            }
@@ -19996,7 +20002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Clears the navigation stack.
-	 * 
+	 *
 	 */
 	function clear() {
 	    loaderDoc = null;
@@ -20006,7 +20012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Pops the recent document or pops all document before the provided document.
-	 * 
+	 *
 	 * @param  {Document} [doc]     The document until which we need to pop.
 	 */
 	function pop(doc) {
@@ -20023,7 +20029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Goes back in history.
-	 * 
+	 *
 	 */
 	function back() {
 	    if (getLastDocumentFromStack()) {
@@ -20033,7 +20039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Removes the current active document from the stack.
-	 * 
+	 *
 	 */
 	function removeActiveDocument() {
 	    var doc = getActiveDocument();
@@ -20348,7 +20354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  */
 		get: function get(key) {
 			var item = localStorage.getItem(key);
-			var val = undefined;
+			var val = void 0;
 
 			if (!_lodash2.default.isUndefined(item)) {
 				item = _lzString2.default.decompress(item);

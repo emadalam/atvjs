@@ -67,7 +67,7 @@ function getErrorDoc(message) {
 
 /**
  * Gets the topmost document from the navigationDocument stack
- * 
+ *
  * @return {Document} The document
  */
 function getLastDocumentFromStack() {
@@ -114,7 +114,7 @@ function show(cfg = {}) {
         doc = presentModal(cfg);
     } else { // no document on the navigation stack, show as a document
         doc = Page.makeDom(cfg);
-        cleanNavigate(doc);    
+        cleanNavigate(doc);
     }
     return doc;
 }
@@ -222,7 +222,7 @@ function cleanNavigate(doc, replace = false) {
     let docs = navigationDocument.documents;
     let last = getLastDocumentFromStack();
 
-    if (!last || last !== loaderDoc || last !== errorDoc || !replace) {
+    if (!replace && (!last || last !== loaderDoc || last !== errorDoc )) {
         pushDocument(doc);
     } else if (last && last === loaderDoc || last === errorDoc) { // replaces any error or loader document from the current document stack
         console.log('replacing current error/loader...');
@@ -374,7 +374,7 @@ function dismissModal() {
 
 /**
  * Clears the navigation stack.
- * 
+ *
  */
 function clear() {
     loaderDoc = null;
@@ -384,7 +384,7 @@ function clear() {
 
 /**
  * Pops the recent document or pops all document before the provided document.
- * 
+ *
  * @param  {Document} [doc]     The document until which we need to pop.
  */
 function pop(doc) {
@@ -397,7 +397,7 @@ function pop(doc) {
 
 /**
  * Goes back in history.
- * 
+ *
  */
 function back() {
     if (getLastDocumentFromStack()) {
@@ -407,7 +407,7 @@ function back() {
 
 /**
  * Removes the current active document from the stack.
- * 
+ *
  */
 function removeActiveDocument() {
     let doc = getActiveDocument();
