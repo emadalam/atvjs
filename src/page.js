@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import Path2Regexp from 'path-to-regexp';
 import Parser from './parser';
 import Ajax from './ajax';
 import Handler from './handler';
@@ -141,6 +142,13 @@ function makeDom(cfg, response) {
  * @return {function(options: Object): Promise}     A function that returns promise upon execution
  */
 function makePage(cfg) {
+    var url = cfg.url,
+        resolveURL;
+    // the URL contains path-variables, resolve them
+    if(typeof url === 'string' && url.indexOf(':') !== -1) {
+        // const parsedURL = url.parse(url);
+        resolveURL = Path2Regexp.compile(url);
+    }
     return (options) => {
         _.defaultsDeep(cfg, defaults);
 
@@ -154,9 +162,9 @@ function makePage(cfg) {
                 // resolves promise with a doc if there is a response param passed
                 // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
                 cfg.ready(options, (response) => resolve((response || _.isUndefined(response)) ? makeDom(cfg, response) : null), reject);
-            } else if (cfg.url) { // make ajax request if a url is provided
+            } else if (url) { // make ajax request if a url is provided
                 Ajax
-                    .get(cfg.url, cfg.options)
+                    .get(resolveURL ? resolveURL((options && options.urlParams) || {}) : url, cfg.options)
                     .then((xhr) => {
                         resolve(makeDom(cfg, xhr.response));
                     }, (xhr) => {

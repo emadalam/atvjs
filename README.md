@@ -22,6 +22,7 @@ Blazing fast Apple TV application development using pure JavaScript.
 	- [Custom options while navigation](#custom-options-while-navigation)
 	- [Creating Menu Page](#creating-menu-page)
 	- [Application initialization using configuration](#application-initialization-using-configuration)
+	- [Dynamic Page URLs](#dynamic-page-urls)
 - [Sample Code](#sample-code)
 - [Useful Links](#useful-links)
 - [Contributions](#contributions)
@@ -428,6 +429,25 @@ ATV.start({
 		// ATV.Navigation.navigate('login');
 	}
 });
+```
+
+<a name="dynamic-page-urls"></a>
+#### Dynamic Page URLs
+
+You can use express-style path-variables in `url`. The example below will resolve `:param` with `"value"`.
+**Note that all defined parameters (i.e. every string in the `url` starting with a `:`) must be set in `urlParams`!**
+
+```javascript
+ATV.Page.create({
+	name: 'home',
+	url: 'path/to/your/api/that/returns/json?param=:param',
+	template: your_template_function
+});
+```
+```
+<button data-href-page="login" data-href-page-options='{"urlParams": {"param": "value"}}'>
+	<text>Login</text>
+</button>
 ```
 
 <a name="sample-code"></a>

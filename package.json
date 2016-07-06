@@ -54,6 +54,7 @@
   "dependencies": {
     "lodash": "3.10.1",
     "lz-string": "1.4.4",
+    "path-to-regexp": "^1.5.3",
     "pubsub-js": "1.5.3"
   }
 }
