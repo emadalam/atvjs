@@ -2803,7 +2803,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  try {
 	    var arr  = [7]
 	      , iter = arr[ITERATOR]();
-	    iter.next = function(){ safe = true; };
+	    iter.next = function(){ return {done: safe = true}; };
 	    arr[ITERATOR] = function(){ return iter; };
 	    exec(arr);
 	  } catch(e){ /* empty */ }
@@ -3222,12 +3222,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  , process    = global.process
 	  , isNode     = classof(process) == 'process'
 	  , P          = global[PROMISE]
+	  , empty      = function(){ /* empty */ }
 	  , Wrapper;
 
 	var testResolve = function(sub){
-	  var test = new P(function(){});
-	  if(sub)test.constructor = Object;
-	  return P.resolve(test) === test;
+	  var test = new P(empty), promise;
+	  if(sub)test.constructor = function(exec){
+	    exec(empty, empty);
+	  };
+	  (promise = P.resolve(test))['catch'](empty);
+	  return promise === test;
 	};
 
 	var USE_NATIVE = function(){
@@ -4144,12 +4148,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	// 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
-	var $export = __webpack_require__(5)
-	  , _apply  = Function.apply;
+	var $export  = __webpack_require__(5)
+	  , _apply   = Function.apply
+	  , anObject = __webpack_require__(22);
 
 	$export($export.S, 'Reflect', {
 	  apply: function apply(target, thisArgument, argumentsList){
-	    return _apply.call(target, thisArgument, argumentsList);
+	    return _apply.call(target, thisArgument, anObject(argumentsList));
 	  }
 	});
 
@@ -4173,10 +4178,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), 'Reflect', {
 	  construct: function construct(Target, args /*, newTarget*/){
 	    aFunction(Target);
+	    anObject(args);
 	    var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
 	    if(Target == newTarget){
 	      // w/o altered newTarget, optimization for 0-4 arguments
-	      if(args != undefined)switch(anObject(args).length){
+	      switch(args.length){
 	        case 0: return new Target;
 	        case 1: return new Target(args[0]);
 	        case 2: return new Target(args[0], args[1]);
@@ -5469,14 +5475,103 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
+	(function () {
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
+	    }
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
+	    }
+	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -5492,7 +5587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = setTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -5509,7 +5604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    clearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -5521,7 +5616,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        setTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -18747,7 +18842,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param  {Object} [data]          The data that will be applied to the function
 	     * @return {Document}               A new Document
 	     */
-
 	    dom: function dom(s, data) {
 	        return parse(s, data);
 	    }
@@ -18847,7 +18941,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @param  {Object} options     Ajax options
 	     * @return {Promise}            The Promise that resolves on ajax success
 	     */
-
 	    get: function get(url, options) {
 	        return ajax(url, options, 'GET');
 	    },
@@ -19266,7 +19359,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @private
 	         * @param  {Event} e    The event passed while this handler is invoked.
 	         */
-
 	        onLinkClick: function onLinkClick(e) {
 	            var element = e.target;
 	            var page = element.getAttribute(hrefAttribute);
@@ -19425,8 +19517,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    return doc.querySelectorAll(selector);
 	                }); // catch any errors while document selection
 	            } else {
-	                    elements = [doc];
-	                }
+	                elements = [doc];
+	            }
 	            elements = _.isError(elements) ? [] : elements;
 	            _.each(fns, function (fn) {
 	                fn = _.isString(fn) ? cfg[fn] : fn; // assume the function to be present on the page configuration obeject
@@ -19850,7 +19942,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var docs = navigationDocument.documents;
 	    var last = getLastDocumentFromStack();
 
-	    if (!replace && (!last || last !== loaderDoc || last !== errorDoc)) {
+	    if (!replace && (!last || last !== loaderDoc && last !== errorDoc)) {
 	        pushDocument(doc);
 	    } else if (last && last === loaderDoc || last === errorDoc) {
 	        // replaces any error or loader document from the current document stack
@@ -20342,7 +20434,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {String} key 				The key
 	  * @param {Object|String} val 		The value to store
 	  */
-
 		set: function set(key, val) {
 			// convert all values to string for proper compression
 			if (!_lodash2.default.isUndefined(val)) {
