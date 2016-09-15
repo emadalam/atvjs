@@ -229,7 +229,7 @@ function cleanNavigate(doc, replace = false) {
     let docs = navigationDocument.documents;
     let last = getLastDocumentFromStack();
 
-    if (!replace && (!last || last !== loaderDoc || last !== errorDoc)) {
+    if (!replace && (!last || last !== loaderDoc && last !== errorDoc)) {
         pushDocument(doc);
     } else if (last && last === loaderDoc || last === errorDoc) { // replaces any error or loader document from the current document stack
         console.log('replacing current error/loader...');
