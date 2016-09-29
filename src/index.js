@@ -1,6 +1,3 @@
-// include the ES6 polyfills
-import 'babel-polyfill';
-
 // external libraries
 import _ from 'lodash';
 import PubSub from 'pubsub-js';
@@ -78,7 +75,7 @@ let libs = {
 
 /**
  * Iterates over each libraries and call setOptions with the relevant options.
- * 
+ *
  * @param  {Object} cfg 	All configuration options relevant to the libraries
  */
 function initLibraries(cfg = {}) {
@@ -121,7 +118,7 @@ const handlers = {
 
 /**
  * Iterates over each supported handler types and attach it on the Apple TV App object.
- * 
+ *
  * @param  {Object} cfg 	All configuration options relevant to the App.
  */
 function initAppHandlers (cfg = {}) {
@@ -130,7 +127,7 @@ function initAppHandlers (cfg = {}) {
 
 /**
  * Starts the Apple TV application after applying the relevant configuration options
- * 
+ *
  * @param  {Object} cfg 		Configuration options
  */
 function start(cfg = {}) {
@@ -138,7 +135,7 @@ function start(cfg = {}) {
 		console.warn('Application already started, cannot call start again.');
 		return;
 	}
-	
+
     initLibraries(cfg);
 	initAppHandlers(cfg);
     // if already bootloaded somewhere
@@ -151,7 +148,7 @@ function start(cfg = {}) {
 
 /**
  * Reloads the application with the provided options and data.
- * 
+ *
  * @param  {Object} [options]           Options value. {when: 'now'} // or 'onResume'
  * @param  {Object} [reloadData]        Custom data that needs to be passed while reloading the app
  */
