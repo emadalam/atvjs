@@ -7569,8 +7569,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
 
 	  function wrap(innerFn, outerFn, self, tryLocsList) {
-	    // If outerFn provided, then outerFn.prototype instanceof Generator.
-	    var generator = Object.create((outerFn || Generator).prototype);
+	    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+	    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+	    var generator = Object.create(protoGenerator.prototype);
 	    var context = new Context(tryLocsList || []);
 
 	    // The ._invoke method unifies the implementations of the .next,
@@ -22096,6 +22097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var hrefOptionsAttribute = 'data-href-page-options';
 	var hrefPageReplaceAttribute = 'data-href-page-replace';
 	var modalCloseBtnAttribute = 'data-alert-dissmiss';
+	var menuItemReloadAttribute = 'reloadOnSelect';
 
 	/**
 	 * Page level default handlers.
@@ -22188,7 +22190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (elementType === 'menuitem') {
 	                // no need to proceed if the page is already loaded or there is no page definition present
-	                if (!element.pageDoc && page) {
+	                if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
 	                    // set a loading message intially to the menuitem
 	                    _menu2.default.setDocument(_navigation2.default.getLoaderDoc(_menu2.default.getLoadingMessage()), menuId);
 	                    // load the page
@@ -22263,12 +22265,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var events = cfg.events;
 
 	        _.each(events, function (fns, e) {
-	            var _e$split = e.split(' ');
-
-	            var _e$split2 = _slicedToArray(_e$split, 2);
-
-	            var ev = _e$split2[0];
-	            var selector = _e$split2[1];
+	            var _e$split = e.split(' '),
+	                _e$split2 = _slicedToArray(_e$split, 2),
+	                ev = _e$split2[0],
+	                selector = _e$split2[1];
 
 	            var elements = null;
 	            if (!_.isArray(fns)) {

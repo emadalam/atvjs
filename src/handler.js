@@ -6,6 +6,7 @@ const hrefAttribute = 'data-href-page';
 const hrefOptionsAttribute = 'data-href-page-options';
 const hrefPageReplaceAttribute = 'data-href-page-replace';
 const modalCloseBtnAttribute = 'data-alert-dissmiss';
+const menuItemReloadAttribute = 'reloadOnSelect';
 
 /**
  * Page level default handlers.
@@ -96,7 +97,7 @@ let handlers = {
 
             if (elementType === 'menuitem') {
                 // no need to proceed if the page is already loaded or there is no page definition present
-                if (!element.pageDoc && page) {
+                if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
                     // set a loading message intially to the menuitem
                     Menu.setDocument(Navigation.getLoaderDoc(Menu.getLoadingMessage()), menuId)
                     // load the page
@@ -105,7 +106,7 @@ let handlers = {
                         if (doc) {
                             // assign the pageDoc to disable reload everytime
                             element.pageDoc = doc;
-                            Menu.setDocument(doc, menuId);    
+                            Menu.setDocument(doc, menuId);
                         }
                         // dissmiss any open modals
                         Navigation.dismissModal();
