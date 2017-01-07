@@ -110,7 +110,7 @@ let handlers = {
                         }
                         // dissmiss any open modals
                         Navigation.dismissModal();
-                    }, (error) => {
+                    }).catch( (error) => {
                         // if there was an error loading the page, set an error page to the menu item
                         Menu.setDocument(Navigation.getErrorDoc(error), menuId);
                         // dissmiss any open modals

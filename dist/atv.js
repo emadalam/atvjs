@@ -22237,7 +22237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                        // dissmiss any open modals
 	                        _navigation2.default.dismissModal();
-	                    }, function (error) {
+	                    }).catch(function (error) {
 	                        // if there was an error loading the page, set an error page to the menu item
 	                        _menu2.default.setDocument(_navigation2.default.getErrorDoc(error), menuId);
 	                        // dissmiss any open modals
@@ -23047,6 +23047,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// base menu string for initial document creation
 	var docStr = '<document><menuBarTemplate><menuBar></menuBar></menuBarTemplate></document>';
+	// template functions
+	var loaderTpl = function loaderTpl(data) {
+	    return '<document>\n    <loadingTemplate>\n        <activityIndicator>\n            <title>' + data.message + '</title>\n        </activityIndicator>\n    </loadingTemplate>\n</document>';
+	};
+
+	var errorTpl = function errorTpl(data) {
+	    return '<document>\n    <descriptiveAlertTemplate>\n        <title>' + data.title + '</title>\n        <description>' + data.message + '</description>\n    </descriptiveAlertTemplate>\n</document>';
+	};
 
 	// indicate whether the menu was created
 	var created = false;
@@ -23060,7 +23068,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	// default menu options
 	var defaults = {
 	    attributes: {},
-	    items: []
+	    items: [],
+	    loadingMessage: loaderTpl,
+	    errorMessage: errorTpl
 	};
 
 	/**
