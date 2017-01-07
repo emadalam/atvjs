@@ -21577,21 +21577,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * 
 	 * @param  {string|function} s      The template function or the string
 	 * @param  {Object} [data]          The data that will be applied to the function
-	 * @return {Document}               A new Document
+	 * @return {Promise}               Promise with a new Document
 	 */
 	function parse(s, data) {
-	    // if a template function is provided, call the function with data
-	    s = _lodash2.default.isFunction(s) ? s(data) : s;
+	    return new Promise(function (resolve, reject) {
+	        // reject not used, because sync exception automatically invokes reject.
 
-	    console.log('parsing string...');
-	    console.log(s);
+	        // if a template function is provided, call the function with data
+	        s = _lodash2.default.isFunction(s) ? s(data) : s;
 
-	    // prepend the xml string if not already present
-	    if (!_lodash2.default.startsWith(s, '<?xml')) {
-	        s = xmlPrefix + s;
-	    }
+	        console.log('parsing string...');
+	        console.log(s);
 
-	    return parser.parseFromString(s, 'application/xml');
+	        // prepend the xml string if not already present
+	        if (!_lodash2.default.startsWith(s, '<?xml')) {
+	            s = xmlPrefix + s;
+	        }
+
+	        var result = parser.parseFromString(s, 'application/xml');
+	        resolve(result);
+	    });
 	}
 
 	/**
@@ -21605,7 +21610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * 
 	     * @param  {string|function} s      The template function or the string
 	     * @param  {Object} [data]          The data that will be applied to the function
-	     * @return {Document}               A new Document
+	     * @return {Promise}               Promise with a new Document
 	     */
 	    dom: function dom(s, data) {
 	        return parse(s, data);
@@ -21795,7 +21800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    style: '',
 	    /**
-	     * Template functin that takes data and returns the TVML template string.
+	     * Template function that takes data and returns the TVML template string.
 	     *
 	     * @param  {Object} data    The data associated with the template
 	     * @return {string}         The final TVML template string.
@@ -21809,7 +21814,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Data transformation function that will be invoked before passing the data to the template function.
 	     *
 	     * @param  {Object} d   The data object
-	     * @return {Obect}      The transformed data
+	     * @return {Object}      The transformed data
 	     */
 	    data: function data(d) {
 	        return d;
@@ -21865,8 +21870,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Prepares a document by adding styles and event handlers.
-	 * 
+	 *
 	 * @param  {Document} doc       The document to prepare
+	 * @param cfg
 	 * @return {Document}           The document passed
 	 */
 	function prepareDom(doc) {
@@ -21893,24 +21899,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @private
 	 * @param  {Object} cfg             Page configuration options
 	 * @param  {Object} response        The data object
-	 * @return {Document}               The newly created document
+	 * @return {Promise.<Document>}               Promise with a newly created document
 	 */
 	function makeDom(cfg, response) {
 	    // apply defaults
 	    _lodash2.default.defaults(cfg, defaults);
 	    // create Document
-	    var doc = _parser2.default.dom(cfg.template, _lodash2.default.isPlainObject(cfg.data) ? cfg.data : cfg.data(response));
-	    // prepare the Document
-	    prepareDom(doc, cfg);
-	    // call the after ready method if defined in the configuration
-	    if (_lodash2.default.isFunction(cfg.afterReady)) {
-	        console.log('calling afterReady method...');
-	        cfg.afterReady(doc);
-	    }
-	    // cache cfg at the document level
-	    doc.page = cfg;
+	    var data = _lodash2.default.isPlainObject(cfg.data) ? cfg.data : cfg.data(response);
 
-	    return doc;
+	    return _parser2.default.dom(cfg.template, data).then(function (res) {
+	        var doc = res;
+	        // prepare the Document
+	        prepareDom(doc, cfg);
+	        // call the after ready method if defined in the configuration
+	        if (_lodash2.default.isFunction(cfg.afterReady)) {
+	            console.log('calling afterReady method...');
+	            if (_lodash2.default.isFunction(cfg.afterReady.then)) {
+	                // afterReady is async
+	                return cfg.afterReady(doc).then(function () {
+	                    // cache cfg at the document level
+	                    doc.page = cfg;
+	                    return doc;
+	                });
+	            } else {
+	                // afterReady is sync
+	                doc = cfg.afterReady(doc);
+	            }
+	        }
+	        doc.page = cfg;
+	        return Promise.resolve(doc);
+	    });
 	}
 
 	/**
@@ -21934,14 +21952,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	                console.log('calling page ready... options:', options);
 	                // resolves promise with a doc if there is a response param passed
 	                // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-	                cfg.ready(options, function (response) {
-	                    return resolve(response || _lodash2.default.isUndefined(response) ? makeDom(cfg, response) : null);
-	                }, reject);
+
+	                if (_lodash2.default.isFunction(cfg.ready.then)) {
+	                    // async
+	                    return cfg.ready(options).then(function (res) {
+	                        if (res || _lodash2.default.isUndefined(res)) {
+	                            return makeDom(cfg, res);
+	                        } else {
+	                            return Promise.resolve(null);
+	                        }
+	                    });
+	                } else {
+	                    // sync
+	                    var response = cfg.ready(options);
+	                    if (response || _lodash2.default.isUndefined(response)) {
+	                        return makeDom(cfg, response);
+	                    } else {
+	                        resolve(null);
+	                    }
+	                }
 	            } else if (cfg.url) {
 	                // make ajax request if a url is provided
-	                _ajax2.default.get(cfg.url, cfg.options).then(function (xhr) {
-	                    resolve(makeDom(cfg, xhr.response));
-	                }, function (xhr) {
+	                return _ajax2.default.get(cfg.url, cfg.options).then(function (xhr) {
+	                    return makeDom(cfg, xhr.response);
+	                }).catch(function (xhr) {
 	                    // if present, call the error handler
 	                    if (_lodash2.default.isFunction(cfg.onError)) {
 	                        cfg.onError(xhr.response, xhr);
@@ -21951,7 +21985,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                });
 	            } else {
 	                // no url/ready method provided, resolve the promise immediately
-	                resolve(makeDom(cfg));
+	                return makeDom(cfg);
 	            }
 	        });
 	    };
@@ -22054,7 +22088,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Returns the previously created page from the cache.
 	     *
 	     * @param  {string} name    Name of the previously created page
-	     * @return {Page}           Page function
+	     * @return {Page}           Page function (Promise)
 	     */
 	    get: function get(name) {
 	        return pages[name];
@@ -22499,7 +22533,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Get a loader document.
 	 *
 	 * @param  {String} message         Loading message
-	 * @return {Document}               A newly created loader document
+	 * @return {Promise}               Promise with a newly created loader document
 	 */
 	function getLoaderDoc(message) {
 	    var tpl = defaults.templates.loader;
@@ -22545,6 +22579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Initializes the menu document if present
 	 *
 	 * @private
+	 * @return {Promise}           Promise with boolean invocation result
 	 */
 	function initMenu() {
 	    var menuCfg = defaults.menu;
@@ -22552,7 +22587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // no configuration given and neither the menu created earlier
 	    // no need to proceed
 	    if (!menuCfg && !_menu2.default.created) {
-	        return;
+	        return Promise.resolve(false);
 	    }
 
 	    // set options to create menu
@@ -22560,15 +22595,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _menu2.default.setOptions(menuCfg);
 	    }
 
-	    menuDoc = _menu2.default.get();
-	    _page2.default.prepareDom(menuDoc);
+	    return _menu2.default.get().then(function (res) {
+	        menuDoc = res;
+	        _page2.default.prepareDom(res);
+	        return res;
+	    });
 	}
 
 	/**
 	 * Helper function to perform navigation after applying the page level default handlers
 	 *
 	 * @param  {Object} cfg         The configurations
-	 * @return {Document}           The created document
+	 * @return {Promise}           The created document
 	 */
 	function show() {
 	    var cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -22582,18 +22620,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // no template exists, cannot proceed
 	    if (!cfg.template) {
 	        console.warn('No template found!');
-	        return;
+	        return Promise.resolve(null);
 	    }
-	    var doc = null;
 	    if (getLastDocumentFromStack() && cfg.type === 'modal') {
 	        // show as a modal if there is something on the navigation stack
-	        doc = presentModal(cfg);
+	        return presentModal(cfg);
 	    } else {
 	        // no document on the navigation stack, show as a document
-	        doc = _page2.default.makeDom(cfg);
-	        cleanNavigate(doc);
+	        return _page2.default.makeDom(cfg).then(function (res) {
+	            cleanNavigate(res);
+	        });
 	    }
-	    return doc;
 	}
 
 	/**
@@ -22601,7 +22638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Also applies any default handlers and caches the document for later use.
 	 *
 	 * @param  {Object|Function} cfg    The configuration options or the template function
-	 * @return {Document}               The created loader document.
+	 * @return {Promise}               The created loader document.
 	 */
 	function showLoading() {
 	    var cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -22621,10 +22658,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    console.log('showing loader... options:', cfg);
 
-	    // cache the doc for later use
-	    loaderDoc = show(cfg);
-
-	    return loaderDoc;
+	    // return promise with cache the doc for later use
+	    return show(cfg);
 	}
 
 	/**
@@ -22632,7 +22667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Also applies any default handlers and caches the document for later use.
 	 *
 	 * @param  {Object|Function|Boolean} cfg    The configuration options or the template function or boolean to hide the error
-	 * @return {Document}                       The created error document.
+	 * @return {Promise}                       The created error document.
 	 */
 	function showError() {
 	    var cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -22640,7 +22675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (_lodash2.default.isBoolean(cfg) && !cfg && errorDoc) {
 	        // hide error
 	        navigationDocument.removeDocument(errorDoc);
-	        return;
+	        return Promise.resolve(null);
 	    }
 	    if (_lodash2.default.isString(cfg)) {
 	        cfg = {
@@ -22656,10 +22691,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    console.log('showing error... options:', cfg);
 
-	    // cache the doc for later use
-	    errorDoc = show(cfg);
-
-	    return errorDoc;
+	    // return promise with cache the doc for later use
+	    return show(cfg);
 	}
 
 	/**
@@ -22738,17 +22771,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    console.log('navigating to menu...');
 
+	    if (!menuDoc) {
+	        return initMenu().then(function (res) {
+	            if (!res) {
+	                console.warn('No menu configuration exists, cannot navigate to the menu page.');
+	                throw new Error('No menu configuration exists, cannot navigate to the menu page.');
+	            } else {
+	                cleanNavigate(res);
+	                return res;
+	            }
+	        });
+	    }
+
 	    return new Promise(function (resolve, reject) {
-	        if (!menuDoc) {
-	            initMenu();
-	        }
-	        if (!menuDoc) {
-	            console.warn('No menu configuration exists, cannot navigate to the menu page.');
-	            reject();
-	        } else {
-	            cleanNavigate(menuDoc);
-	            resolve(menuDoc);
-	        }
+	        cleanNavigate(menuDoc);
+	        resolve(menuDoc);
 	    });
 	}
 
@@ -22781,53 +22818,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	            console.error(page, 'page does not exist!');
 	            var tpl = defaults.templates.status['404'];
 	            if (tpl) {
-	                var doc = showError({
+	                return showError({
 	                    template: tpl,
 	                    title: '404',
 	                    message: 'The requested page cannot be found!'
 	                });
-	                resolve(doc);
 	            } else {
 	                reject();
 	            }
-	            return;
-	        }
-
-	        p(options).then(function (doc) {
-	            // support suppressing of navigation since there is no dom available (page resolved with empty document)
-	            if (doc) {
-	                // if page is a modal, show as modal window
-	                if (p.type === 'modal') {
-	                    // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
-	                    _lodash2.default.defer(presentModal, doc);
-	                } else {
-	                    // navigate
-	                    // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
-	                    _lodash2.default.defer(cleanNavigate, doc, replace);
+	        } else {
+	            p(options).then(function (doc) {
+	                // support suppressing of navigation since there is no dom available (page resolved with empty document)
+	                if (doc) {
+	                    // if page is a modal, show as modal window
+	                    if (p.type === 'modal') {
+	                        // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
+	                        // todo: think about defer, maybe it is redundant part?
+	                        return presentModal(doc);
+	                    } else {
+	                        // navigate
+	                        // defer to avoid clashes with any ongoing process (tvmlkit weird behavior -_-)
+	                        _lodash2.default.defer(cleanNavigate, doc, replace);
+	                        // resolve promise
+	                        resolve(doc);
+	                    }
 	                }
-	            }
-	            // resolve promise
-	            resolve(doc);
-	        }, function (error) {
-	            // something went wrong during the page execution
-	            // warn and set the status to 500
-	            if (error instanceof Error) {
-	                console.error('There was an error in the page code. ' + error);
-	                error.status = '500';
-	            }
-	            // try showing a status level error page if it exists
-	            var statusLevelErrorTpls = defaults.templates.status;
-	            var tpl = statusLevelErrorTpls[error.status];
-	            if (tpl) {
-	                showError(_lodash2.default.defaults({
-	                    template: tpl
-	                }, error.response));
-	                resolve(error);
-	            } else {
-	                console.warn('No error handler present in the page or navigation default configurations.', error);
-	                reject(error);
-	            }
-	        });
+	            }).catch(function (error) {
+	                // something went wrong during the page execution
+	                // warn and set the status to 500
+	                if (error instanceof Error) {
+	                    console.error('There was an error in the page code. ' + error);
+	                    error.status = '500';
+	                }
+	                // try showing a status level error page if it exists
+	                var statusLevelErrorTpls = defaults.templates.status;
+	                var tpl = statusLevelErrorTpls[error.status];
+	                if (tpl) {
+	                    return showError(_lodash2.default.defaults({
+	                        template: tpl
+	                    }, error.response));
+	                } else {
+	                    console.warn('No error handler present in the page or navigation default configurations.', error);
+	                    reject(error);
+	                }
+	            });
+	        }
 	    });
 	}
 
@@ -22835,20 +22870,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Shows a modal. Closes the previous modal before showing a new modal.
 	 *
 	 * @param  {Document|String|Object} modal       The TVML string/document representation of the modal window or a configuration object to create modal from
-	 * @return {Document}                           The created modal document
+	 * @return {Promise}                           Promise with created modal document
 	 */
 	function presentModal(modal) {
 	    var doc = modal; // assume a document object is passed
 	    if (_lodash2.default.isString(modal)) {
 	        // if a modal document string is passed
-	        doc = _parser2.default.dom(modal);
+	        return _parser2.default.dom(modal).then(function (res) {
+	            doc = res;
+	            navigationDocument.presentModal(doc);
+	            modalDoc = doc;
+	            return doc;
+	        });
 	    } else if (_lodash2.default.isPlainObject(modal)) {
 	        // if a modal page configuration is passed
-	        doc = _page2.default.makeDom(modal);
+	        return _page2.default.makeDom(modal).then(function (res) {
+	            doc = res;
+	            navigationDocument.presentModal(doc);
+	            modalDoc = doc;
+	            return doc;
+	        });
+	    } else {
+	        navigationDocument.presentModal(doc);
+	        modalDoc = doc;
+	        return Promise.resolve(doc);
 	    }
-	    navigationDocument.presentModal(doc);
-	    modalDoc = doc;
-	    return doc;
 	}
 
 	/**
@@ -23006,9 +23052,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var created = false;
 
 	// few private instances
-	var doc = _parser2.default.dom(docStr);
-	var menuBarEl = doc.getElementsByTagName('menuBar').item(0);
-	var menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
+	var doc = void 0;
+	var menuBarEl = void 0;
+	var menuBarFeature = void 0;
 	var itemsCache = {};
 
 	// default menu options
@@ -23046,13 +23092,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Returns instance of the menu document (auto create if not already created)
 	 * 
-	 * @return {Document}		Instance of the created menu document.
+	 * @return {Promise}		Promise with instance of the created menu document.
 	 */
 	function get() {
 	    if (!created) {
-	        create();
+	        return create();
 	    }
-	    return doc;
+	    return Promise.resolve(doc);
 	}
 
 	/**
@@ -23087,33 +23133,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Generates a menu from the configuration obejct.
+	 * Generates a menu from the configuration object.
 	 * 
 	 * @param  {Object} cfg 		Menu related configurations
-	 * @return {Document}     		The created menu document
+	 * @return {Promise<Document>}     		Promise with created menu document
 	 */
 	function create() {
 	    var cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	    if (created) {
 	        console.warn('An instance of menu already exists, skipping creation...');
-	        return;
+	        return Promise.resolve(doc);
 	    }
 	    // defaults
 	    _lodash2.default.assign(defaults, cfg);
 
 	    console.log('creating menu...', defaults);
 
-	    // set attributes to the menubar element
-	    setAttributes(menuBarEl, defaults.attributes);
-	    // add all items to the menubar
-	    _lodash2.default.each(defaults.items, function (item) {
-	        return addItem(item);
+	    return _parser2.default.dom(docStr).then(function (res) {
+	        doc = res;
+	        menuBarEl = doc.getElementsByTagName('menuBar').item(0);
+	        menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
+	        // set attributes to the menubar element
+	        setAttributes(menuBarEl, defaults.attributes);
+	        // add all items to the menubar
+	        _lodash2.default.each(defaults.items, function (item) {
+	            return addItem(item);
+	        });
+	        // indicate done
+	        created = true;
+	        return doc;
 	    });
-	    // indicate done
-	    created = true;
-
-	    return doc;
 	}
 
 	/**

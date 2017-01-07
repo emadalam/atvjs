@@ -21,20 +21,20 @@ const defaults = {
      */
     style: '',
     /**
-     * Template functin that takes data and returns the TVML template string.
+     * Template function that takes data and returns the TVML template string.
      *
      * @param  {Object} data    The data associated with the template
      * @return {string}         The final TVML template string.
      */
     template(data) {
-        console.warn('No template exists!')
+        console.warn('No template exists!');
         return '';
     },
     /**
      * Data transformation function that will be invoked before passing the data to the template function.
      *
      * @param  {Object} d   The data object
-     * @return {Obect}      The transformed data
+     * @return {Object}      The transformed data
      */
     data(d) {
         return d;
@@ -87,8 +87,9 @@ function appendStyle(style, doc) {
 
 /**
  * Prepares a document by adding styles and event handlers.
- * 
+ *
  * @param  {Document} doc       The document to prepare
+ * @param cfg
  * @return {Document}           The document passed
  */
 function prepareDom(doc, cfg = {}) {
@@ -113,24 +114,41 @@ function prepareDom(doc, cfg = {}) {
  * @private
  * @param  {Object} cfg             Page configuration options
  * @param  {Object} response        The data object
- * @return {Document}               The newly created document
+ * @return {Promise.<Document>}               Promise with a newly created document
  */
 function makeDom(cfg, response) {
     // apply defaults
     _.defaults(cfg, defaults);
     // create Document
-    let doc = Parser.dom(cfg.template, (_.isPlainObject(cfg.data) ? cfg.data: cfg.data(response)));
-    // prepare the Document
-    prepareDom(doc, cfg);
-    // call the after ready method if defined in the configuration
-    if (_.isFunction(cfg.afterReady)) {
-        console.log('calling afterReady method...');
-        cfg.afterReady(doc);
-    }
-    // cache cfg at the document level
-    doc.page = cfg;
+    let data = _.isPlainObject(cfg.data)
+        ? cfg.data
+        : cfg.data(response);
 
-    return doc;
+    return Parser.dom(cfg.template, data)
+        .then(function (res) {
+            let doc = res;
+            // prepare the Document
+            prepareDom(doc, cfg);
+            // call the after ready method if defined in the configuration
+            if (_.isFunction(cfg.afterReady)) {
+                console.log('calling afterReady method...');
+                if(_.isFunction(cfg.afterReady.then)){
+                    // afterReady is async
+                    return cfg.afterReady(doc)
+                        .then(function () {
+                            // cache cfg at the document level
+                            doc.page = cfg;
+                            return doc;
+                        });
+                }
+                else {
+                    // afterReady is sync
+                    doc = cfg.afterReady(doc);
+                }
+            }
+            doc.page = cfg;
+            return Promise.resolve(doc);
+        });
 }
 
 /**
@@ -153,13 +171,39 @@ function makePage(cfg) {
                 console.log('calling page ready... options:', options);
                 // resolves promise with a doc if there is a response param passed
                 // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-                cfg.ready(options, (response) => resolve((response || _.isUndefined(response)) ? makeDom(cfg, response) : null), reject);
+
+                if(_.isFunction(cfg.ready.then)){
+                    // async
+                    return cfg.ready(options)
+                        .then(function (res) {
+                            if(res || _.isUndefined(res)){
+                                return makeDom(cfg, res)
+                            }
+                            else
+                            {
+                                return Promise.resolve(null);
+                            }
+                        })
+                }
+                else
+                {
+                    // sync
+                    let response = cfg.ready(options);
+                    if(response || _.isUndefined(response)){
+                        return makeDom(cfg, response)
+                    }
+                    else
+                    {
+                        resolve(null)
+                    }
+                }
             } else if (cfg.url) { // make ajax request if a url is provided
-                Ajax
+                return Ajax
                     .get(cfg.url, cfg.options)
                     .then((xhr) => {
-                        resolve(makeDom(cfg, xhr.response));
-                    }, (xhr) => {
+                        return makeDom(cfg, xhr.response);
+                    })
+                    .catch((xhr) => {
                         // if present, call the error handler
                         if (_.isFunction(cfg.onError)) {
                             cfg.onError(xhr.response, xhr);
@@ -168,7 +212,7 @@ function makePage(cfg) {
                         }
                     });
             } else { // no url/ready method provided, resolve the promise immediately
-                resolve(makeDom(cfg));
+                return makeDom(cfg);
             }
         });
     }
@@ -270,7 +314,7 @@ export default {
      * Returns the previously created page from the cache.
      *
      * @param  {string} name    Name of the previously created page
-     * @return {Page}           Page function
+     * @return {Page}           Page function (Promise)
      */
     get(name) {
         return pages[name];

@@ -8,9 +8,9 @@ const docStr = '<document><menuBarTemplate><menuBar></menuBar></menuBarTemplate>
 let created = false;
 
 // few private instances
-let doc = Parser.dom(docStr);
-let menuBarEl = (doc.getElementsByTagName('menuBar')).item(0);
-let menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
+let doc;
+let menuBarEl;
+let menuBarFeature;
 let itemsCache = {};
 
 // default menu options
@@ -44,13 +44,13 @@ function setAttributes(el, attributes) {
 /**
  * Returns instance of the menu document (auto create if not already created)
  * 
- * @return {Document}		Instance of the created menu document.
+ * @return {Promise}		Promise with instance of the created menu document.
  */
 function get() {
     if (!created) {
-        create();
+        return create();
     }
-    return doc;
+    return Promise.resolve(doc);
 }
 
 /**
@@ -83,29 +83,34 @@ function addItem(item = {}) {
 }
 
 /**
- * Generates a menu from the configuration obejct.
+ * Generates a menu from the configuration object.
  * 
  * @param  {Object} cfg 		Menu related configurations
- * @return {Document}     		The created menu document
+ * @return {Promise<Document>}     		Promise with created menu document
  */
 function create(cfg = {}) {
     if (created) {
         console.warn('An instance of menu already exists, skipping creation...');
-        return;
+        return Promise.resolve(doc);
     }
     // defaults
     _.assign(defaults, cfg);
     
     console.log('creating menu...', defaults);
-    
-    // set attributes to the menubar element
-    setAttributes(menuBarEl, defaults.attributes);
-    // add all items to the menubar
-    _.each(defaults.items, (item) => addItem(item));
-    // indicate done
-    created = true;
 
-    return doc;
+    return Parser.dom(docStr)
+        .then(function (res) {
+            doc = res;
+            menuBarEl = (doc.getElementsByTagName('menuBar')).item(0);
+            menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
+            // set attributes to the menubar element
+            setAttributes(menuBarEl, defaults.attributes);
+            // add all items to the menubar
+            _.each(defaults.items, (item) => addItem(item));
+            // indicate done
+            created = true;
+            return doc;
+        });
 }
 
 /**

@@ -7,21 +7,26 @@ const xmlPrefix = '<?xml version="1.0" encoding="UTF-8" ?>'; // xml prefix
  * 
  * @param  {string|function} s      The template function or the string
  * @param  {Object} [data]          The data that will be applied to the function
- * @return {Document}               A new Document
+ * @return {Promise}               Promise with a new Document
  */
 function parse(s, data) {
-    // if a template function is provided, call the function with data
-    s = _.isFunction(s) ? s(data) : s;
+    return new Promise((resolve, reject) => {
+        // reject not used, because sync exception automatically invokes reject.
 
-    console.log('parsing string...');
-    console.log(s);
+        // if a template function is provided, call the function with data
+        s = _.isFunction(s) ? s(data) : s;
 
-    // prepend the xml string if not already present
-    if (!_.startsWith(s, '<?xml')) {
-        s = xmlPrefix + s;
-    }
+        console.log('parsing string...');
+        console.log(s);
 
-    return parser.parseFromString(s, 'application/xml');
+        // prepend the xml string if not already present
+        if (!_.startsWith(s, '<?xml')) {
+            s = xmlPrefix + s;
+        }
+
+        const result = parser.parseFromString(s, 'application/xml');
+        resolve(result);
+    });
 }
 
 /**
@@ -35,7 +40,7 @@ export default {
      * 
      * @param  {string|function} s      The template function or the string
      * @param  {Object} [data]          The data that will be applied to the function
-     * @return {Document}               A new Document
+     * @return {Promise}               Promise with a new Document
      */
     dom(s, data) {
         return parse(s, data);
