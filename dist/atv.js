@@ -21914,8 +21914,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // call the after ready method if defined in the configuration
 	        if (_lodash2.default.isFunction(cfg.afterReady)) {
 	            console.log('calling afterReady method...');
-	            // in case, when the 'afterReady' is sync - we wrap it with 'when' (promise), otherwise it is already async.
-	            return cfg.afterReady(doc).when(function () {
+	            // 'afterReady' should be async.
+	            return cfg.afterReady(doc).then(function () {
 	                // cache cfg at the document level
 	                doc.page = cfg;
 	                return doc;
@@ -21947,8 +21947,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                console.log('calling page ready... options:', options);
 	                // resolves promise with a doc if there is a response param passed
 	                // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-	                // in case, when the 'ready' is sync - we wrap it with 'when' (promise), otherwise it is already async.
-	                return cfg.ready(options).when(function (res) {
+	                // 'ready' should be async.
+	                return cfg.ready(options).then(function (res) {
 	                    if (res || _lodash2.default.isUndefined(res)) {
 	                        return makeDom(cfg, res);
 	                    } else {

@@ -132,9 +132,9 @@ function makeDom(cfg, response) {
             // call the after ready method if defined in the configuration
             if (_.isFunction(cfg.afterReady)) {
                 console.log('calling afterReady method...');
-                // in case, when the 'afterReady' is sync - we wrap it with 'when' (promise), otherwise it is already async.
+                // 'afterReady' should be async.
                 return cfg.afterReady(doc)
-                    .when(function () {
+                    .then(function () {
                         // cache cfg at the document level
                         doc.page = cfg;
                         return doc;
@@ -165,9 +165,9 @@ function makePage(cfg) {
                 console.log('calling page ready... options:', options);
                 // resolves promise with a doc if there is a response param passed
                 // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-                // in case, when the 'ready' is sync - we wrap it with 'when' (promise), otherwise it is already async.
+                // 'ready' should be async.
                 return cfg.ready(options)
-                    .when(function (res) {
+                    .then(function (res) {
                         if(res || _.isUndefined(res)){
                             return makeDom(cfg, res)
                         }
