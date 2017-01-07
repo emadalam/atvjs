@@ -141,7 +141,7 @@ function makeDom(cfg, response) {
                     });
             }
             doc.page = cfg;
-            return Promise.resolve(doc);
+            return doc;
         });
 }
 
@@ -173,7 +173,7 @@ function makePage(cfg) {
                         }
                         else
                         {
-                            return Promise.resolve(null);
+                            return null;
                         }
                     })
             } else if (cfg.url) { // make ajax request if a url is provided

@@ -21922,7 +21922,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	        }
 	        doc.page = cfg;
-	        return Promise.resolve(doc);
+	        return doc;
 	    });
 	}
 
@@ -21952,7 +21952,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    if (res || _lodash2.default.isUndefined(res)) {
 	                        return makeDom(cfg, res);
 	                    } else {
-	                        return Promise.resolve(null);
+	                        return null;
 	                    }
 	                });
 	            } else if (cfg.url) {
