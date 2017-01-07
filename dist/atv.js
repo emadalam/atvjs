@@ -22011,19 +22011,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *          onError(response, xhr) {
 	     *              // perform the error handing
 	     *          },
-	     *          ready(options, resolve, reject) {
-	     *              // call resolve with the data to render the provided template
+	     *          ready(options) {
+	     *              return new Promise( (resolve, reject) => {
+	     *                  // call resolve with the data to render the provided template
+	     *                  // you may also call resolve with null/falsy value to suppress rendering,
+	     *                  // this is useful when you want full control of the page rendering
 	     *
-	     *              // you may also call resolve with null/falsy value to suppress rendering,
-	     *              // this is useful when you want full control of the page rendering
+	     *                  // reject is not preferred, but you may still call it
 	     *
-	     *              // reject is not preferred, but you may still call it
-	     *
-	     *              // any configuration options passed while calling the page method,
-	     *              // will be carried over to ready method at runtime
+	     *                  // any configuration options passed while calling the page method,
+	     *                  // will be carried over to ready method at runtime
+	     *              });
 	     *          },
 	     *          afterReady(doc) {
-	     *              // all your code that relies on a document object should go here
+	     *              return new Promise( (resolve, reject) => {
+	     *                  // all your code that relies on a document object should go here
+	     *              }
 	     *          },
 	     *          onTitleSelect(e) {
 	     *              // do the magic here
