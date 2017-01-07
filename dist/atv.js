@@ -21914,17 +21914,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // call the after ready method if defined in the configuration
 	        if (_lodash2.default.isFunction(cfg.afterReady)) {
 	            console.log('calling afterReady method...');
-	            if (_lodash2.default.isFunction(cfg.afterReady.then)) {
-	                // afterReady is async
-	                return cfg.afterReady(doc).then(function () {
-	                    // cache cfg at the document level
-	                    doc.page = cfg;
-	                    return doc;
-	                });
-	            } else {
-	                // afterReady is sync
-	                doc = cfg.afterReady(doc);
-	            }
+	            // in case, when the 'afterReady' is sync - we wrap it with 'when' (promise), otherwise it is already async.
+	            return cfg.afterReady(doc).when(function () {
+	                // cache cfg at the document level
+	                doc.page = cfg;
+	                return doc;
+	            });
 	        }
 	        doc.page = cfg;
 	        return Promise.resolve(doc);
@@ -21952,25 +21947,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                console.log('calling page ready... options:', options);
 	                // resolves promise with a doc if there is a response param passed
 	                // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-
-	                if (_lodash2.default.isFunction(cfg.ready.then)) {
-	                    // async
-	                    return cfg.ready(options).then(function (res) {
-	                        if (res || _lodash2.default.isUndefined(res)) {
-	                            return makeDom(cfg, res);
-	                        } else {
-	                            return Promise.resolve(null);
-	                        }
-	                    });
-	                } else {
-	                    // sync
-	                    var response = cfg.ready(options);
-	                    if (response || _lodash2.default.isUndefined(response)) {
-	                        return makeDom(cfg, response);
+	                // in case, when the 'ready' is sync - we wrap it with 'when' (promise), otherwise it is already async.
+	                return cfg.ready(options).when(function (res) {
+	                    if (res || _lodash2.default.isUndefined(res)) {
+	                        return makeDom(cfg, res);
 	                    } else {
-	                        resolve(null);
+	                        return Promise.resolve(null);
 	                    }
-	                }
+	                });
 	            } else if (cfg.url) {
 	                // make ajax request if a url is provided
 	                return _ajax2.default.get(cfg.url, cfg.options).then(function (xhr) {
