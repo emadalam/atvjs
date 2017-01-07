@@ -22215,6 +22215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *
 	         * @private
 	         * @param  {Event} e    The event passed while this handler was invoked
+	         * @return {Promise}
 	         */
 	        onMenuItemSelect: function onMenuItemSelect(e) {
 	            var element = e.target;
@@ -22225,26 +22226,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (elementType === 'menuitem') {
 	                // no need to proceed if the page is already loaded or there is no page definition present
 	                if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
-	                    // set a loading message intially to the menuitem
-	                    _menu2.default.setDocument(_navigation2.default.getLoaderDoc(_menu2.default.getLoadingMessage()), menuId);
+	                    // set a loading message initially to the menuitem
+	                    var loaderDocLoaded = function loaderDocLoaded(res) {
+	                        _menu2.default.setDocument(res, menuId);
+	                    };
 	                    // load the page
-	                    page().then(function (doc) {
+	                    var pageLoadingPromise = page().then(function (doc) {
 	                        // if there is a document loaded, assign it to the menuitem
 	                        if (doc) {
 	                            // assign the pageDoc to disable reload everytime
 	                            element.pageDoc = doc;
 	                            _menu2.default.setDocument(doc, menuId);
 	                        }
-	                        // dissmiss any open modals
+	                        // dismiss any open modals
 	                        _navigation2.default.dismissModal();
 	                    }).catch(function (error) {
 	                        // if there was an error loading the page, set an error page to the menu item
-	                        _menu2.default.setDocument(_navigation2.default.getErrorDoc(error), menuId);
-	                        // dissmiss any open modals
-	                        _navigation2.default.dismissModal();
+	                        return _navigation2.default.getErrorDoc(error).then(function (res) {
+	                            _menu2.default.setDocument(res, menuId);
+	                            // dismiss any open modals
+	                            _navigation2.default.dismissModal();
+	                        });
 	                    });
+
+	                    return _navigation2.default.getLoaderDoc(_menu2.default.getLoadingMessage()).then(loaderDocLoaded).then(pageLoadingPromise);
 	                }
 	            }
+	            return Promise.resolve(false);
 	        }
 	    }
 	};
@@ -23047,15 +23055,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// base menu string for initial document creation
 	var docStr = '<document><menuBarTemplate><menuBar></menuBar></menuBarTemplate></document>';
-	// template functions
-	var loaderTpl = function loaderTpl(data) {
-	    return '<document>\n    <loadingTemplate>\n        <activityIndicator>\n            <title>' + data.message + '</title>\n        </activityIndicator>\n    </loadingTemplate>\n</document>';
-	};
-
-	var errorTpl = function errorTpl(data) {
-	    return '<document>\n    <descriptiveAlertTemplate>\n        <title>' + data.title + '</title>\n        <description>' + data.message + '</description>\n    </descriptiveAlertTemplate>\n</document>';
-	};
-
 	// indicate whether the menu was created
 	var created = false;
 
@@ -23068,9 +23067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// default menu options
 	var defaults = {
 	    attributes: {},
-	    items: [],
-	    loadingMessage: loaderTpl,
-	    errorMessage: errorTpl
+	    items: []
 	};
 
 	/**

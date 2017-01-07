@@ -3,22 +3,6 @@ import Parser from './parser';
 
 // base menu string for initial document creation
 const docStr = '<document><menuBarTemplate><menuBar></menuBar></menuBarTemplate></document>';
-// template functions
-const loaderTpl = (data) => `<document>
-    <loadingTemplate>
-        <activityIndicator>
-            <title>${data.message}</title>
-        </activityIndicator>
-    </loadingTemplate>
-</document>`;
-
-const errorTpl = (data) => `<document>
-    <descriptiveAlertTemplate>
-        <title>${data.title}</title>
-        <description>${data.message}</description>
-    </descriptiveAlertTemplate>
-</document>`;
-
 // indicate whether the menu was created
 let created = false;
 
@@ -31,9 +15,7 @@ let itemsCache = {};
 // default menu options
 let defaults = {
     attributes: {},
-    items: [],
-    loadingMessage: loaderTpl,
-    errorMessage: errorTpl
+    items: []
 };
 
 /**
