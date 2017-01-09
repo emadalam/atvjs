@@ -132,13 +132,20 @@ function makeDom(cfg, response) {
             // call the after ready method if defined in the configuration
             if (_.isFunction(cfg.afterReady)) {
                 console.log('calling afterReady method...');
-                // 'afterReady' should be async.
-                return cfg.afterReady(doc)
-                    .then(function () {
+                // 'afterReady' - resolve sync/async.
+                const afterReadyResult = cfg.afterReady(doc);
+                if(_.isUndefined(afterReadyResult) || afterReadyResult.then !== 'function'){
+                    // sync
+                    doc.page = cfg;
+                    return doc;
+                } else{
+                    // async
+                    return afterReadyResult.then(function () {
                         // cache cfg at the document level
                         doc.page = cfg;
                         return doc;
                     });
+                }
             }
             doc.page = cfg;
             return doc;
@@ -161,18 +168,27 @@ function makePage(cfg) {
         if (_.isFunction(cfg.ready)) { // if present, call the ready function
             console.log('calling page ready... options:', options);
             // resolves promise with a doc if there is a response param passed
-            // if the response param is null/falsy value, resolve with null (useful for catching and suppressing any navigation later)
-            // 'ready' should be async.
-            return cfg.ready(options)
-                .then(function (res) {
-                    if(res || _.isUndefined(res)){
-                        return makeDom(cfg, res)
-                    }
-                    else
-                    {
+            // if the response param is null/false value, resolve with null (useful for catching and suppressing any navigation later)
+            // 'ready' - resolve sync/async.
+            const readyResult = cfg.ready(options);
+
+            if(_.isUndefined(readyResult) || typeof readyResult.then !== 'function'){
+                // sync
+                if (readyResult || _.isUndefined(readyResult)) {
+                    return makeDom(cfg, readyResult);
+                } else {
+                    return Promise.resolve(null);
+                }
+            } else {
+                // async
+                return readyResult.then(function (res) {
+                    if (res || _.isUndefined(res)) {
+                        return makeDom(cfg, res);
+                    } else {
                         return null;
                     }
-                })
+                });
+            }
         } else if (cfg.url) { // make ajax request if a url is provided
             return Ajax
                 .get(cfg.url, cfg.options)

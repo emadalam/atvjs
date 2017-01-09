@@ -21914,12 +21914,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // call the after ready method if defined in the configuration
 	        if (_lodash2.default.isFunction(cfg.afterReady)) {
 	            console.log('calling afterReady method...');
-	            // 'afterReady' should be async.
-	            return cfg.afterReady(doc).then(function () {
-	                // cache cfg at the document level
+	            // 'afterReady' - resolve sync/async.
+	            var afterReadyResult = cfg.afterReady(doc);
+	            if (_lodash2.default.isUndefined(afterReadyResult) || afterReadyResult.then !== 'function') {
+	                // sync
 	                doc.page = cfg;
 	                return doc;
-	            });
+	            } else {
+	                // async
+	                return afterReadyResult.then(function () {
+	                    // cache cfg at the document level
+	                    doc.page = cfg;
+	                    return doc;
+	                });
+	            }
 	        }
 	        doc.page = cfg;
 	        return doc;
@@ -21943,15 +21951,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // if present, call the ready function
 	            console.log('calling page ready... options:', options);
 	            // resolves promise with a doc if there is a response param passed
-	            // if the response param is null/falsy value, resolve with null (useful for catching and suppressing any navigation later)
-	            // 'ready' should be async.
-	            return cfg.ready(options).then(function (res) {
-	                if (res || _lodash2.default.isUndefined(res)) {
-	                    return makeDom(cfg, res);
+	            // if the response param is null/false value, resolve with null (useful for catching and suppressing any navigation later)
+	            // 'ready' - resolve sync/async.
+	            var readyResult = cfg.ready(options);
+
+	            if (_lodash2.default.isUndefined(readyResult) || typeof readyResult.then !== 'function') {
+	                // sync
+	                if (readyResult || _lodash2.default.isUndefined(readyResult)) {
+	                    return makeDom(cfg, readyResult);
 	                } else {
-	                    return null;
+	                    return Promise.resolve(null);
 	                }
-	            });
+	            } else {
+	                // async
+	                return readyResult.then(function (res) {
+	                    if (res || _lodash2.default.isUndefined(res)) {
+	                        return makeDom(cfg, res);
+	                    } else {
+	                        return null;
+	                    }
+	                });
+	            }
 	        } else if (cfg.url) {
 	            // make ajax request if a url is provided
 	            return _ajax2.default.get(cfg.url, cfg.options).then(function (xhr) {
