@@ -158,42 +158,43 @@ function makePage(cfg) {
 
         console.log('making page... options:', cfg);
 
+        if (_.isFunction(cfg.ready)) { // if present, call the ready function
+            console.log('calling page ready... options:', options);
+            // resolves promise with a doc if there is a response param passed
+            // if the response param is null/falsy value, resolve with null (useful for catching and suppressing any navigation later)
+            // 'ready' should be async.
+            return cfg.ready(options)
+                .then(function (res) {
+                    if(res || _.isUndefined(res)){
+                        return makeDom(cfg, res)
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                })
+        } else if (cfg.url) { // make ajax request if a url is provided
+            return Ajax
+                .get(cfg.url, cfg.options)
+                .then((xhr) => {
+                    return makeDom(cfg, xhr.response);
+                })
+                .catch((xhr) => {
+                    // if present, call the error handler
+                    if (_.isFunction(cfg.onError)) {
+                        cfg.onError(xhr.response, xhr);
+                    } else {
+                        console.log(xhr);
+                        console.error("Error in makePage with Ajax!");
+                        throw new Error("Error in makePage with Ajax!");
+                    }
+                });
+        } else { // no url/ready method provided, resolve the promise immediately
+            return makeDom(cfg);
+        }
+
         // return a promise that resolves after completion of the ajax request
         // if no ready method or url configuration exist, the promise is resolved immediately and the resultant dom is returned
-        return new Promise((resolve, reject) => {
-            if (_.isFunction(cfg.ready)) { // if present, call the ready function
-                console.log('calling page ready... options:', options);
-                // resolves promise with a doc if there is a response param passed
-                // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-                // 'ready' should be async.
-                return cfg.ready(options)
-                    .then(function (res) {
-                        if(res || _.isUndefined(res)){
-                            return makeDom(cfg, res)
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    })
-            } else if (cfg.url) { // make ajax request if a url is provided
-                return Ajax
-                    .get(cfg.url, cfg.options)
-                    .then((xhr) => {
-                        return makeDom(cfg, xhr.response);
-                    })
-                    .catch((xhr) => {
-                        // if present, call the error handler
-                        if (_.isFunction(cfg.onError)) {
-                            cfg.onError(xhr.response, xhr);
-                        } else {
-                            reject(xhr);
-                        }
-                    });
-            } else { // no url/ready method provided, resolve the promise immediately
-                return makeDom(cfg);
-            }
-        });
     }
 }
 

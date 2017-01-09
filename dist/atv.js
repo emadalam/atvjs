@@ -21939,39 +21939,40 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        console.log('making page... options:', cfg);
 
+	        if (_lodash2.default.isFunction(cfg.ready)) {
+	            // if present, call the ready function
+	            console.log('calling page ready... options:', options);
+	            // resolves promise with a doc if there is a response param passed
+	            // if the response param is null/falsy value, resolve with null (useful for catching and suppressing any navigation later)
+	            // 'ready' should be async.
+	            return cfg.ready(options).then(function (res) {
+	                if (res || _lodash2.default.isUndefined(res)) {
+	                    return makeDom(cfg, res);
+	                } else {
+	                    return null;
+	                }
+	            });
+	        } else if (cfg.url) {
+	            // make ajax request if a url is provided
+	            return _ajax2.default.get(cfg.url, cfg.options).then(function (xhr) {
+	                return makeDom(cfg, xhr.response);
+	            }).catch(function (xhr) {
+	                // if present, call the error handler
+	                if (_lodash2.default.isFunction(cfg.onError)) {
+	                    cfg.onError(xhr.response, xhr);
+	                } else {
+	                    console.log(xhr);
+	                    console.error("Error in makePage with Ajax!");
+	                    throw new Error("Error in makePage with Ajax!");
+	                }
+	            });
+	        } else {
+	            // no url/ready method provided, resolve the promise immediately
+	            return makeDom(cfg);
+	        }
+
 	        // return a promise that resolves after completion of the ajax request
 	        // if no ready method or url configuration exist, the promise is resolved immediately and the resultant dom is returned
-	        return new Promise(function (resolve, reject) {
-	            if (_lodash2.default.isFunction(cfg.ready)) {
-	                // if present, call the ready function
-	                console.log('calling page ready... options:', options);
-	                // resolves promise with a doc if there is a response param passed
-	                // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-	                // 'ready' should be async.
-	                return cfg.ready(options).then(function (res) {
-	                    if (res || _lodash2.default.isUndefined(res)) {
-	                        return makeDom(cfg, res);
-	                    } else {
-	                        return null;
-	                    }
-	                });
-	            } else if (cfg.url) {
-	                // make ajax request if a url is provided
-	                return _ajax2.default.get(cfg.url, cfg.options).then(function (xhr) {
-	                    return makeDom(cfg, xhr.response);
-	                }).catch(function (xhr) {
-	                    // if present, call the error handler
-	                    if (_lodash2.default.isFunction(cfg.onError)) {
-	                        cfg.onError(xhr.response, xhr);
-	                    } else {
-	                        reject(xhr);
-	                    }
-	                });
-	            } else {
-	                // no url/ready method provided, resolve the promise immediately
-	                return makeDom(cfg);
-	            }
-	        });
 	    };
 	}
 
@@ -22793,22 +22794,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Promise}            Returns a Promise that resolves upon successful navigation.
 	 */
 	function navigate(page, options, replace) {
-	    var p = _page2.default.get(page);
-
-	    if (_lodash2.default.isBoolean(options)) {
-	        replace = options;
-	    } else {
-	        options = options || {};
-	    }
-
-	    if (_lodash2.default.isBoolean(options.replace)) {
-	        replace = options.replace;
-	    }
 
 	    console.log('navigating... page:', page, ':: options:', options);
 
 	    // return a promise that resolves if there was a navigation that was performed
 	    return new Promise(function (resolve, reject) {
+
+	        var p = _page2.default.get(page);
+
+	        if (_lodash2.default.isBoolean(options)) {
+	            replace = options;
+	        } else {
+	            options = options || {};
+	        }
+
+	        if (_lodash2.default.isBoolean(options.replace)) {
+	            replace = options.replace;
+	        }
+
 	        if (!p) {
 	            console.error(page, 'page does not exist!');
 	            var tpl = defaults.templates.status['404'];

@@ -288,22 +288,24 @@ function navigateToMenuPage() {
  * @return {Promise}            Returns a Promise that resolves upon successful navigation.
  */
 function navigate(page, options, replace) {
-    let p = Page.get(page);
-
-    if (_.isBoolean(options)) {
-        replace = options;
-    } else {
-        options = options || {};
-    }
-
-    if (_.isBoolean(options.replace)) {
-        replace = options.replace;
-    }
 
     console.log('navigating... page:', page, ':: options:', options);
 
     // return a promise that resolves if there was a navigation that was performed
     return new Promise((resolve, reject) => {
+
+        let p = Page.get(page);
+
+        if (_.isBoolean(options)) {
+            replace = options;
+        } else {
+            options = options || {};
+        }
+
+        if (_.isBoolean(options.replace)) {
+            replace = options.replace;
+        }
+
         if (!p) {
             console.error(page, 'page does not exist!');
             let tpl = defaults.templates.status['404'];
