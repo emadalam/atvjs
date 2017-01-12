@@ -95,12 +95,14 @@ function initMenu() {
         Menu.setOptions(menuCfg);
     }
 
+    let menuReceived = function (res) {
+        menuDoc = res;
+        Page.prepareDom(res);
+        return res;
+    };
+
     return Menu.get()
-        .then(function (res) {
-            menuDoc = res;
-            Page.prepareDom(res);
-            return res;
-        });
+        .then(menuReceived);
 }
 
 /**
@@ -124,10 +126,11 @@ function show(cfg = {}) {
     if (getLastDocumentFromStack() && cfg.type === 'modal') { // show as a modal if there is something on the navigation stack
         return presentModal(cfg);
     } else { // no document on the navigation stack, show as a document
+        let domCreated = function (res) {
+            cleanNavigate(res)
+        };
         return Page.makeDom(cfg)
-            .then(function (res) {
-                cleanNavigate(res)
-            });
+            .then(domCreated);
     }
 }
 
@@ -262,7 +265,8 @@ function navigateToMenuPage() {
     console.log('navigating to menu...');
 
     if (!menuDoc) {
-        return initMenu().then(function (res) {
+
+        let menuInitialized = function (res) {
             if (!res) {
                 console.warn('No menu configuration exists, cannot navigate to the menu page.');
                 throw new Error('No menu configuration exists, cannot navigate to the menu page.')
@@ -270,7 +274,10 @@ function navigateToMenuPage() {
                 cleanNavigate(res);
                 return res;
             }
-        })
+        };
+
+        return initMenu()
+            .then(menuInitialized)
     }
 
     return new Promise((resolve, reject) => {
@@ -320,7 +327,7 @@ function navigate(page, options, replace) {
             }
         }
         else {
-            p(options).then(function (doc) {
+            let pageCreated = function (doc) {
                 // support suppressing of navigation since there is no dom available (page resolved with empty document)
                 if (doc) {
                     // if page is a modal, show as modal window
@@ -335,26 +342,31 @@ function navigate(page, options, replace) {
                         resolve(doc);
                     }
                 }
-            })
-                .catch(function (error) {
-                    // something went wrong during the page execution
-                    // warn and set the status to 500
-                    if (error instanceof Error) {
-                        console.error(`There was an error in the page code. ${error}`);
-                        error.status = '500';
-                    }
-                    // try showing a status level error page if it exists
-                    let statusLevelErrorTpls = defaults.templates.status;
-                    let tpl = statusLevelErrorTpls[error.status];
-                    if (tpl) {
-                        return showError(_.defaults({
-                            template: tpl
-                        }, error.response));
-                    } else {
-                        console.warn('No error handler present in the page or navigation default configurations.', error);
-                        reject(error);
-                    }
-                });
+            };
+
+            let pageError = function (error) {
+                // something went wrong during the page execution
+                // warn and set the status to 500
+                if (error instanceof Error) {
+                    console.error(`There was an error in the page code. ${error}`);
+                    error.status = '500';
+                }
+                // try showing a status level error page if it exists
+                let statusLevelErrorTpls = defaults.templates.status;
+                let tpl = statusLevelErrorTpls[error.status];
+                if (tpl) {
+                    return showError(_.defaults({
+                        template: tpl
+                    }, error.response));
+                } else {
+                    console.warn('No error handler present in the page or navigation default configurations.', error);
+                    reject(error);
+                }
+            };
+
+            p(options)
+                .then(pageCreated)
+                .catch(pageError);
         }
     });
 }

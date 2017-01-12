@@ -124,32 +124,36 @@ function makeDom(cfg, response) {
         ? cfg.data
         : cfg.data(response);
 
-    return Parser.dom(cfg.template, data)
-        .then(function (res) {
-            let doc = res;
-            // prepare the Document
-            prepareDom(doc, cfg);
-            // call the after ready method if defined in the configuration
-            if (_.isFunction(cfg.afterReady)) {
-                console.log('calling afterReady method...');
-                // 'afterReady' - resolve sync/async.
-                const afterReadyResult = cfg.afterReady(doc);
-                if(_.isUndefined(afterReadyResult) || afterReadyResult.then !== 'function'){
-                    // sync
+    let domParsed = function (res) {
+        let doc = res;
+        // prepare the Document
+        prepareDom(doc, cfg);
+        // call the after ready method if defined in the configuration
+        if (_.isFunction(cfg.afterReady)) {
+            console.log('calling afterReady method...');
+            // 'afterReady' - resolve sync/async.
+            const afterReadyResult = cfg.afterReady(doc);
+            if(_.isUndefined(afterReadyResult) || afterReadyResult.then !== 'function'){
+                // sync
+                doc.page = cfg;
+                return doc;
+            } else{
+                // async
+                let afterReadyHandled = function () {
+                    // cache cfg at the document level
                     doc.page = cfg;
                     return doc;
-                } else{
-                    // async
-                    return afterReadyResult.then(function () {
-                        // cache cfg at the document level
-                        doc.page = cfg;
-                        return doc;
-                    });
-                }
+                };
+                return afterReadyResult
+                    .then(afterReadyHandled);
             }
-            doc.page = cfg;
-            return doc;
-        });
+        }
+        doc.page = cfg;
+        return doc;
+    };
+
+    return Parser.dom(cfg.template, data)
+        .then(domParsed);
 }
 
 /**

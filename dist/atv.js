@@ -21907,7 +21907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // create Document
 	    var data = _lodash2.default.isPlainObject(cfg.data) ? cfg.data : cfg.data(response);
 
-	    return _parser2.default.dom(cfg.template, data).then(function (res) {
+	    var domParsed = function domParsed(res) {
 	        var doc = res;
 	        // prepare the Document
 	        prepareDom(doc, cfg);
@@ -21922,16 +21922,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return doc;
 	            } else {
 	                // async
-	                return afterReadyResult.then(function () {
+	                var afterReadyHandled = function afterReadyHandled() {
 	                    // cache cfg at the document level
 	                    doc.page = cfg;
 	                    return doc;
-	                });
+	                };
+	                return afterReadyResult.then(afterReadyHandled);
 	            }
 	        }
 	        doc.page = cfg;
 	        return doc;
-	    });
+	    };
+
+	    return _parser2.default.dom(cfg.template, data).then(domParsed);
 	}
 
 	/**
@@ -22234,12 +22237,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (elementType === 'menuitem') {
 	                // no need to proceed if the page is already loaded or there is no page definition present
 	                if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
-	                    // set a loading message initially to the menuitem
-	                    var loaderDocLoaded = function loaderDocLoaded(res) {
+	                    // Loading element
+	                    var loading = function loading(res) {
 	                        _menu2.default.setDocument(res, menuId);
 	                    };
-	                    // load the page
-	                    var pageLoadingPromise = page().then(function (doc) {
+	                    // Page loaded
+	                    var loaded = function loaded(doc) {
 	                        // if there is a document loaded, assign it to the menuitem
 	                        if (doc) {
 	                            // assign the pageDoc to disable reload everytime
@@ -22248,16 +22251,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                        // dismiss any open modals
 	                        _navigation2.default.dismissModal();
-	                    }).catch(function (error) {
+	                    };
+	                    // Error occurred
+	                    var error = function error(_error) {
 	                        // if there was an error loading the page, set an error page to the menu item
-	                        return _navigation2.default.getErrorDoc(error).then(function (res) {
+	                        return _navigation2.default.getErrorDoc(_error).then(function (res) {
 	                            _menu2.default.setDocument(res, menuId);
 	                            // dismiss any open modals
 	                            _navigation2.default.dismissModal();
 	                        });
-	                    });
+	                    };
 
-	                    return _navigation2.default.getLoaderDoc(_menu2.default.getLoadingMessage()).then(loaderDocLoaded).then(pageLoadingPromise);
+	                    return _navigation2.default.getLoaderDoc(_menu2.default.getLoadingMessage()).then(loading).then(page).then(loaded).catch(error);
 	                }
 	            }
 	            return Promise.resolve(false);
@@ -22611,11 +22616,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _menu2.default.setOptions(menuCfg);
 	    }
 
-	    return _menu2.default.get().then(function (res) {
+	    var menuReceived = function menuReceived(res) {
 	        menuDoc = res;
 	        _page2.default.prepareDom(res);
 	        return res;
-	    });
+	    };
+
+	    return _menu2.default.get().then(menuReceived);
 	}
 
 	/**
@@ -22643,9 +22650,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return presentModal(cfg);
 	    } else {
 	        // no document on the navigation stack, show as a document
-	        return _page2.default.makeDom(cfg).then(function (res) {
+	        var domCreated = function domCreated(res) {
 	            cleanNavigate(res);
-	        });
+	        };
+	        return _page2.default.makeDom(cfg).then(domCreated);
 	    }
 	}
 
@@ -22788,7 +22796,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log('navigating to menu...');
 
 	    if (!menuDoc) {
-	        return initMenu().then(function (res) {
+
+	        var menuInitialized = function menuInitialized(res) {
 	            if (!res) {
 	                console.warn('No menu configuration exists, cannot navigate to the menu page.');
 	                throw new Error('No menu configuration exists, cannot navigate to the menu page.');
@@ -22796,7 +22805,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                cleanNavigate(res);
 	                return res;
 	            }
-	        });
+	        };
+
+	        return initMenu().then(menuInitialized);
 	    }
 
 	    return new Promise(function (resolve, reject) {
@@ -22845,7 +22856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                reject();
 	            }
 	        } else {
-	            p(options).then(function (doc) {
+	            var pageCreated = function pageCreated(doc) {
 	                // support suppressing of navigation since there is no dom available (page resolved with empty document)
 	                if (doc) {
 	                    // if page is a modal, show as modal window
@@ -22861,7 +22872,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        resolve(doc);
 	                    }
 	                }
-	            }).catch(function (error) {
+	            };
+
+	            var pageError = function pageError(error) {
 	                // something went wrong during the page execution
 	                // warn and set the status to 500
 	                if (error instanceof Error) {
@@ -22879,7 +22892,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    console.warn('No error handler present in the page or navigation default configurations.', error);
 	                    reject(error);
 	                }
-	            });
+	            };
+
+	            p(options).then(pageCreated).catch(pageError);
 	        }
 	    });
 	}
@@ -23167,7 +23182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    console.log('creating menu...', defaults);
 
-	    return _parser2.default.dom(docStr).then(function (res) {
+	    var afterMenuDocCreated = function afterMenuDocCreated(res) {
 	        doc = res;
 	        menuBarEl = doc.getElementsByTagName('menuBar').item(0);
 	        menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
@@ -23180,7 +23195,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // indicate done
 	        created = true;
 	        return doc;
-	    });
+	    };
+
+	    return _parser2.default.dom(docStr).then(afterMenuDocCreated);
 	}
 
 	/**

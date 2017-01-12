@@ -97,19 +97,21 @@ function create(cfg = {}) {
     
     console.log('creating menu...', defaults);
 
+    let afterMenuDocCreated = function (res) {
+        doc = res;
+        menuBarEl = (doc.getElementsByTagName('menuBar')).item(0);
+        menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
+        // set attributes to the menubar element
+        setAttributes(menuBarEl, defaults.attributes);
+        // add all items to the menubar
+        _.each(defaults.items, (item) => addItem(item));
+        // indicate done
+        created = true;
+        return doc;
+    };
+
     return Parser.dom(docStr)
-        .then(function (res) {
-            doc = res;
-            menuBarEl = (doc.getElementsByTagName('menuBar')).item(0);
-            menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
-            // set attributes to the menubar element
-            setAttributes(menuBarEl, defaults.attributes);
-            // add all items to the menubar
-            _.each(defaults.items, (item) => addItem(item));
-            // indicate done
-            created = true;
-            return doc;
-        });
+        .then(afterMenuDocCreated);
 }
 
 /**
