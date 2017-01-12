@@ -99,12 +99,12 @@ let handlers = {
             if (elementType === 'menuitem') {
                 // no need to proceed if the page is already loaded or there is no page definition present
                 if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
-                    // set a loading message initially to the menuitem
-                    let loaderDocLoaded = function (res) {
+                    // Loading element
+                    let loading = function (res) {
                         Menu.setDocument(res, menuId);
                     };
-                    // load the page
-                    let pageLoadingPromise = page().then((doc) => {
+                    // Page loaded
+                    let loaded = function(doc) {
                         // if there is a document loaded, assign it to the menuitem
                         if (doc) {
                             // assign the pageDoc to disable reload everytime
@@ -113,7 +113,9 @@ let handlers = {
                         }
                         // dismiss any open modals
                         Navigation.dismissModal();
-                    }).catch( (error) => {
+                    };
+                    // Error occurred
+                    let error = function(error) {
                         // if there was an error loading the page, set an error page to the menu item
                         return Navigation.getErrorDoc(error)
                             .then(function (res) {
@@ -121,11 +123,14 @@ let handlers = {
                                 // dismiss any open modals
                                 Navigation.dismissModal();
                             });
-                    });
+                    };
 
-                    return Navigation.getLoaderDoc(Menu.getLoadingMessage())
-                        .then(loaderDocLoaded)
-                        .then(pageLoadingPromise);
+                    return Navigation
+                        .getLoaderDoc(Menu.getLoadingMessage())
+                        .then(loading)
+                        .then(page)
+                        .then(loaded)
+                        .catch(error);
                 }
             }
             return Promise.resolve(false)
