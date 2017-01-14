@@ -2,7 +2,7 @@ import _ from 'lodash';
 import Parser from './parser';
 
 // base menu string for initial document creation
-const docStr = '<document><menuBarTemplate><menuBar></menuBar></menuBarTemplate></document>';
+let docStr = '<document><menuBarTemplate><menuBar></menuBar></menuBarTemplate></document>';
 // indicate whether the menu was created
 let created = false;
 
@@ -73,6 +73,8 @@ function addItem(item = {}) {
     el.innerHTML = `<title>${(_.isFunction(item.name) ? item.name() : item.name)}</title>`;
     // add page reference
     el.page = item.page;
+    // add page options reference
+    el.options = item.options;
     // appends to the menu
     menuBarEl.insertBefore(el, null);
     // cache for later use
@@ -109,6 +111,11 @@ function create(cfg = {}) {
         created = true;
         return doc;
     };
+
+    if(!!defaults.template){
+        // if template was specified, use it.
+        docStr = _.isFunction(defaults.template) ? defaults.template() : defaults.template
+    }
 
     return Parser.dom(docStr)
         .then(afterMenuDocCreated);

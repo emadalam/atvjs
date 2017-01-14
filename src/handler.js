@@ -95,6 +95,7 @@ let handlers = {
             let menuId = element.getAttribute('id');
             let elementType = element.nodeName.toLowerCase();
             let page = element.page;
+            let options = element.options;
 
             if (elementType === 'menuitem') {
                 // no need to proceed if the page is already loaded or there is no page definition present
@@ -103,8 +104,12 @@ let handlers = {
                     let loading = function (res) {
                         Menu.setDocument(res, menuId);
                     };
+                    // Load page
+                    let loadPage = function(){
+                        return page(options);
+                    };
                     // Page loaded
-                    let loaded = function(doc) {
+                    let pageLoaded = function(doc) {
                         // if there is a document loaded, assign it to the menuitem
                         if (doc) {
                             // assign the pageDoc to disable reload everytime
@@ -128,8 +133,8 @@ let handlers = {
                     return Navigation
                         .getLoaderDoc(Menu.getLoadingMessage())
                         .then(loading)
-                        .then(page)
-                        .then(loaded)
+                        .then(loadPage)
+                        .then(pageLoaded)
                         .catch(error);
                 }
             }
@@ -146,7 +151,7 @@ let handlers = {
 function setOptions(cfg = {}) {
     console.log('setting handler options...', cfg);
     // override the default options
-    _.defaultsDeep(handlers, cfg.handlers);
+    _.defaultsDeep(handlers, cfg.handlers); 
 }
 
 /**
