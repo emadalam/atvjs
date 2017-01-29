@@ -21,20 +21,20 @@ const defaults = {
      */
     style: '',
     /**
-     * Template functin that takes data and returns the TVML template string.
+     * Template function that takes data and returns the TVML template string.
      *
      * @param  {Object} data    The data associated with the template
      * @return {string}         The final TVML template string.
      */
     template(data) {
-        console.warn('No template exists!')
+        console.warn('No template exists!');
         return '';
     },
     /**
      * Data transformation function that will be invoked before passing the data to the template function.
      *
      * @param  {Object} d   The data object
-     * @return {Obect}      The transformed data
+     * @return {Object}      The transformed data
      */
     data(d) {
         return d;
@@ -87,8 +87,9 @@ function appendStyle(style, doc) {
 
 /**
  * Prepares a document by adding styles and event handlers.
- * 
+ *
  * @param  {Document} doc       The document to prepare
+ * @param cfg
  * @return {Document}           The document passed
  */
 function prepareDom(doc, cfg = {}) {
@@ -113,24 +114,46 @@ function prepareDom(doc, cfg = {}) {
  * @private
  * @param  {Object} cfg             Page configuration options
  * @param  {Object} response        The data object
- * @return {Document}               The newly created document
+ * @return {Promise.<Document>}               Promise with a newly created document
  */
 function makeDom(cfg, response) {
     // apply defaults
     _.defaults(cfg, defaults);
     // create Document
-    let doc = Parser.dom(cfg.template, (_.isPlainObject(cfg.data) ? cfg.data: cfg.data(response)));
-    // prepare the Document
-    prepareDom(doc, cfg);
-    // call the after ready method if defined in the configuration
-    if (_.isFunction(cfg.afterReady)) {
-        console.log('calling afterReady method...');
-        cfg.afterReady(doc);
-    }
-    // cache cfg at the document level
-    doc.page = cfg;
+    let data = _.isPlainObject(cfg.data)
+        ? cfg.data
+        : cfg.data(response);
 
-    return doc;
+    let domParsed = function (res) {
+        let doc = res;
+        // prepare the Document
+        prepareDom(doc, cfg);
+        // call the after ready method if defined in the configuration
+        if (_.isFunction(cfg.afterReady)) {
+            console.log('calling afterReady method...');
+            // 'afterReady' - resolve sync/async.
+            const afterReadyResult = cfg.afterReady(doc);
+            if(_.isUndefined(afterReadyResult) || afterReadyResult.then !== 'function'){
+                // sync
+                doc.page = cfg;
+                return doc;
+            } else{
+                // async
+                let afterReadyHandled = function () {
+                    // cache cfg at the document level
+                    doc.page = cfg;
+                    return doc;
+                };
+                return afterReadyResult
+                    .then(afterReadyHandled);
+            }
+        }
+        doc.page = cfg;
+        return doc;
+    };
+
+    return Parser.dom(cfg.template, data)
+        .then(domParsed);
 }
 
 /**
@@ -146,31 +169,52 @@ function makePage(cfg) {
 
         console.log('making page... options:', cfg);
 
+        if (_.isFunction(cfg.ready)) { // if present, call the ready function
+            console.log('calling page ready... options:', options);
+            // resolves promise with a doc if there is a response param passed
+            // if the response param is null/false value, resolve with null (useful for catching and suppressing any navigation later)
+            // 'ready' - resolve sync/async.
+            const readyResult = cfg.ready(options);
+
+            if(_.isUndefined(readyResult) || typeof readyResult.then !== 'function'){
+                // sync
+                if (readyResult || _.isUndefined(readyResult)) {
+                    return makeDom(cfg, readyResult);
+                } else {
+                    return Promise.resolve(null);
+                }
+            } else {
+                // async
+                return readyResult.then(function (res) {
+                    if (res || _.isUndefined(res)) {
+                        return makeDom(cfg, res);
+                    } else {
+                        return null;
+                    }
+                });
+            }
+        } else if (cfg.url) { // make ajax request if a url is provided
+            return Ajax
+                .get(cfg.url, cfg.options)
+                .then((xhr) => {
+                    return makeDom(cfg, xhr.response);
+                })
+                .catch((xhr) => {
+                    // if present, call the error handler
+                    if (_.isFunction(cfg.onError)) {
+                        cfg.onError(xhr.response, xhr);
+                    } else {
+                        console.log(xhr);
+                        console.error("Error in makePage with Ajax!");
+                        throw new Error("Error in makePage with Ajax!");
+                    }
+                });
+        } else { // no url/ready method provided, resolve the promise immediately
+            return makeDom(cfg);
+        }
+
         // return a promise that resolves after completion of the ajax request
         // if no ready method or url configuration exist, the promise is resolved immediately and the resultant dom is returned
-        return new Promise((resolve, reject) => {
-            if (_.isFunction(cfg.ready)) { // if present, call the ready function
-                console.log('calling page ready... options:', options);
-                // resolves promise with a doc if there is a response param passed
-                // if the response param is null/falsy value, resolve with null (usefull for catching and supressing any navigation later)
-                cfg.ready(options, (response) => resolve((response || _.isUndefined(response)) ? makeDom(cfg, response) : null), reject);
-            } else if (cfg.url) { // make ajax request if a url is provided
-                Ajax
-                    .get(cfg.url, cfg.options)
-                    .then((xhr) => {
-                        resolve(makeDom(cfg, xhr.response));
-                    }, (xhr) => {
-                        // if present, call the error handler
-                        if (_.isFunction(cfg.onError)) {
-                            cfg.onError(xhr.response, xhr);
-                        } else {
-                            reject(xhr);
-                        }
-                    });
-            } else { // no url/ready method provided, resolve the promise immediately
-                resolve(makeDom(cfg));
-            }
-        });
     }
 }
 
@@ -210,19 +254,22 @@ export default {
      *          onError(response, xhr) {
      *              // perform the error handing
      *          },
-     *          ready(options, resolve, reject) {
-     *              // call resolve with the data to render the provided template
+     *          ready(options) {
+     *              return new Promise( (resolve, reject) => {
+     *                  // call resolve with the data to render the provided template
+     *                  // you may also call resolve with null/falsy value to suppress rendering,
+     *                  // this is useful when you want full control of the page rendering
      *
-     *              // you may also call resolve with null/falsy value to suppress rendering,
-     *              // this is useful when you want full control of the page rendering
+     *                  // reject is not preferred, but you may still call it
      *
-     *              // reject is not preferred, but you may still call it
-     *
-     *              // any configuration options passed while calling the page method,
-     *              // will be carried over to ready method at runtime
+     *                  // any configuration options passed while calling the page method,
+     *                  // will be carried over to ready method at runtime
+     *              });
      *          },
      *          afterReady(doc) {
-     *              // all your code that relies on a document object should go here
+     *              return new Promise( (resolve, reject) => {
+     *                  // all your code that relies on a document object should go here
+     *              }
      *          },
      *          onTitleSelect(e) {
      *              // do the magic here
@@ -270,7 +317,7 @@ export default {
      * Returns the previously created page from the cache.
      *
      * @param  {string} name    Name of the previously created page
-     * @return {Page}           Page function
+     * @return {Page}           Page function (Promise)
      */
     get(name) {
         return pages[name];

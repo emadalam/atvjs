@@ -1,5 +1,7 @@
 // external libraries
-import 'babel-polyfill';
+if (!global._babelPolyfill) {
+    require('babel-polyfill');
+}
 import _ from 'lodash';
 import PubSub from 'pubsub-js';
 import LZString from 'lz-string';

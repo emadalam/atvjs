@@ -88,36 +88,57 @@ let handlers = {
          *
          * @private
          * @param  {Event} e    The event passed while this handler was invoked
+         * @return {Promise}
          */
         onMenuItemSelect(e) {
             let element = e.target;
             let menuId = element.getAttribute('id');
             let elementType = element.nodeName.toLowerCase();
             let page = element.page;
+            let options = element.options;
 
             if (elementType === 'menuitem') {
                 // no need to proceed if the page is already loaded or there is no page definition present
                 if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
-                    // set a loading message intially to the menuitem
-                    Menu.setDocument(Navigation.getLoaderDoc(Menu.getLoadingMessage()), menuId)
-                    // load the page
-                    page().then((doc) => {
+                    // Loading element
+                    let loading = function (res) {
+                        Menu.setDocument(res, menuId);
+                    };
+                    // Load page
+                    let loadPage = function(){
+                        return page(options);
+                    };
+                    // Page loaded
+                    let pageLoaded = function(doc) {
                         // if there is a document loaded, assign it to the menuitem
                         if (doc) {
                             // assign the pageDoc to disable reload everytime
                             element.pageDoc = doc;
                             Menu.setDocument(doc, menuId);
                         }
-                        // dissmiss any open modals
+                        // dismiss any open modals
                         Navigation.dismissModal();
-                    }, (error) => {
+                    };
+                    // Error occurred
+                    let error = function(error) {
                         // if there was an error loading the page, set an error page to the menu item
-                        Menu.setDocument(Navigation.getErrorDoc(error), menuId);
-                        // dissmiss any open modals
-                        Navigation.dismissModal();
-                    });
+                        return Navigation.getErrorDoc(error)
+                            .then(function (res) {
+                                Menu.setDocument(res, menuId);
+                                // dismiss any open modals
+                                Navigation.dismissModal();
+                            });
+                    };
+
+                    return Navigation
+                        .getLoaderDoc(Menu.getLoadingMessage())
+                        .then(loading)
+                        .then(loadPage)
+                        .then(pageLoaded)
+                        .catch(error);
                 }
             }
+            return Promise.resolve(false)
         }
     }
 };
@@ -130,7 +151,7 @@ let handlers = {
 function setOptions(cfg = {}) {
     console.log('setting handler options...', cfg);
     // override the default options
-    _.defaultsDeep(handlers, cfg.handlers);
+    _.defaultsDeep(handlers, cfg.handlers); 
 }
 
 /**
