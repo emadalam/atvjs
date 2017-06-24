@@ -432,7 +432,9 @@ ATV.start({
 
 <a name="sample-code"></a>
 ### Sample Code
-You can find a port of the original TVML Catalog sample code [re-written using atvjs](https://github.com/emadalam/tvml-catalog-using-atvjs).
+- [Movie Catalog](https://github.com/emadalam/appletv-demo) (using open [TMDb API](https://developers.themoviedb.org/3/))
+- [TVJS App Boilerplate](https://github.com/emadalam/appletv-boilerplate)
+- Apple's TVML Catalog sample code [re-written using atvjs](https://github.com/emadalam/tvml-catalog-using-atvjs).
 
 <a name="useful-links"></a>
 ### Useful Links
