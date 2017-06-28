@@ -123,54 +123,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	// all libraries
 	var libs = {
 	  /**
-	   * Internal alias to lodash library
-	   * @type {https://github.com/lodash/lodash}
+	   * Internal alias to [lodash]{@link https://github.com/lodash/lodash} library
+	   * @alias module:ATV._
 	   */
 	  _: _lodash2.default,
 	  /**
-	   * Internal alias to lz-string compression library
-	   * @type {https://github.com/pieroxy/lz-string/}
+	   * Internal alias to [lz-string compression]{@link https://github.com/pieroxy/lz-string/} library
+	   * @alias module:ATV.LZString
 	   */
 	  LZString: _lzString2.default,
 	  /**
 	   * Ajax wrapper using Promises
-	   * @type {./ajax.js}
+	   * @alias module:ATV.Ajax
+	   * @type {module:ajax}
 	   */
 	  Ajax: _ajax2.default,
 	  /**
 	   * Page level navigation methods.
-	   * @type {./navigation.js}
+	   * @alias module:ATV.Navigation
+	   * @type {module:navigation}
 	   */
 	  Navigation: _navigation2.default,
 	  /**
 	   * Page Creation
-	   * @type {./page.js}
+	   * @alias module:ATV.Page
+	   * @type {module:page}
 	   */
 	  Page: _page2.default,
 	  /**
 	   * A minimalistic parser wrapper using the builtin DOMParser
-	   * @type {./parser.js}
+	   * @alias module:ATV.Parser
+	   * @type {module:parser}
 	   */
 	  Parser: _parser2.default,
 	  /**
 	   * Basic event handling including some default ones
-	   * @type {./handler.js}
+	   * @alias module:ATV.Handler
+	   * @type {module:handler}
 	   */
 	  Handler: _handler2.default,
 	  /**
 	   * Apple TV settings object with some basic helpers
-	   * @type {./settings.js}
+	   * @alias module:ATV.Settings
+	   * @type {module:settings}
 	   */
 	  Settings: _settings2.default,
 	  /**
 	   * TVML menu template creation with few utility methods
-	   * @type {./menu.js}
+	   * @alias module:ATV.Menu
+	   * @type {module:menu}
 	   */
 	  Menu: _menu2.default
 	};
 
 	/**
 	 * Iterates over each libraries and call setOptions with the relevant options.
+	 *
+	 * @private
 	 *
 	 * @param  {Object} cfg 	All configuration options relevant to the libraries
 	 */
@@ -189,6 +198,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// all supported Apple TV App level handlers
 	var handlers = {
+	  /**
+	   * App launch event
+	   *
+	   * @event onLaunch
+	   * @alias module:ATV#onLaunch
+	   */
 	  onLaunch: function onLaunch() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var fn = arguments[1];
@@ -197,6 +212,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log('launching application...');
 	    fn(options);
 	  },
+
+	  /**
+	   * App error event
+	   *
+	   * @event onError
+	   * @alias module:ATV#onError
+	   */
 	  onError: function onError() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var fn = arguments[1];
@@ -204,6 +226,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log('an error occurred in the application...');
 	    fn(options);
 	  },
+
+	  /**
+	   * App resume event
+	   *
+	   * @event onResume
+	   * @alias module:ATV#onResume
+	   */
 	  onResume: function onResume() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var fn = arguments[1];
@@ -211,6 +240,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log('resuming application...');
 	    fn(options);
 	  },
+
+	  /**
+	   * App suspend event
+	   *
+	   * @event onSuspend
+	   * @alias module:ATV#onSuspend
+	   */
 	  onSuspend: function onSuspend() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var fn = arguments[1];
@@ -218,6 +254,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log('suspending application...');
 	    fn(options);
 	  },
+
+	  /**
+	   * App exit event
+	   *
+	   * @event onExit
+	   * @alias module:ATV#onExit
+	   */
 	  onExit: function onExit() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var fn = arguments[1];
@@ -225,6 +268,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    console.log('exiting application...');
 	    fn(options);
 	  },
+
+	  /**
+	   * App reload event
+	   *
+	   * @event onReload
+	   * @alias module:ATV#onReload
+	   */
 	  onReload: function onReload() {
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var fn = arguments[1];
@@ -236,6 +286,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Iterates over each supported handler types and attach it on the Apple TV App object.
+	 *
+	 * @private
 	 *
 	 * @param  {Object} cfg 	All configuration options relevant to the App.
 	 */
@@ -249,6 +301,115 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Starts the Apple TV application after applying the relevant configuration options
+	 *
+	 * @example
+	 * // create your pages
+	 * let SearchPage = ATV.Page.create({ page configurations });
+	 * let HomePage = ATV.Page.create({ page configurations });
+	 * let MoviesPage = ATV.Page.create({ page configurations });
+	 * let TVShowsPage = ATV.Page.create({ page configurations });
+	 * let LoginPage = ATV.Page.create({ page configurations });
+	 *
+	 * // template functions
+	 * const loaderTpl = (data) => `<document>
+	 *     <loadingTemplate>
+	 *         <activityIndicator>
+	 *             <title>${data.message}</title>
+	 *         </activityIndicator>
+	 *     </loadingTemplate>
+	 * </document>`;
+	 *
+	 * const errorTpl = (data) => `<document>
+	 *     <descriptiveAlertTemplate>
+	 *           <title>${data.title}</title>
+	 *           <description>${data.message}</description>
+	 *       </descriptiveAlertTemplate>
+	 *   </document>`;
+	 *
+	 * // Global TVML styles
+	 * let globalStyles = `
+	 * .text-bold {
+	 *     font-weight: bold;
+	 * }
+	 * .text-white {
+	 *     color: rgb(255, 255, 255);
+	 * }
+	 * .dark-background-color {
+	 *     background-color: #091a2a;
+	 * }
+	 * .button {
+	 *     background-color: rgba(0, 0, 0, 0.1);
+	 *     tv-tint-color: rgba(0, 0, 0, 0.1);
+	 * }
+	 * `;
+	 *
+	 * // start your application by passing configurations
+	 * ATV.start({
+	 *     style: globalStyles,
+	 *     menu: {
+	 *         attributes: {},
+	 *         items: [{
+	 *             id: 'search',
+	 *             name: 'Search',
+	 *             page: SearchPage
+	 *         }, {
+	 *             id: 'homepage',
+	 *             name: 'Home',
+	 *             page: HomePage,
+	 *             attributes: {
+	 *                 autoHighlight: true // auto highlight on navigate
+	 *             }
+	 *         }, {
+	 *             id: 'movies',
+	 *             name: 'Movies',
+	 *             page: MoviesPage
+	 *         }, {
+	 *             id: 'tvshows',
+	 *             name: 'TV Shows',
+	 *             page: TVShowsPage
+	 *         }]
+	 *     },
+	 *     templates: {
+	 *         // loader template
+	 *         loader: loaderTpl,
+	 *         // global error template
+	 *         error: errorTpl,
+	 *         // xhr status based error messages
+	 *         status: {
+	 *             '404': () => errorTpl({
+	 *                 title: '404',
+	 *                 message: 'The given page was not found'
+	 *             }),
+	 *             '500': () => errorTpl({
+	 *                 title: '500',
+	 *                 message: 'An unknown error occurred, please try again later!'
+	 *             })
+	 *         }
+	 *     },
+	 *     // global event handlers that will be called for each of the pages
+	 *     handlers: {
+	 *         select: {
+	 *             globalSelecthandler(e) {
+	 *                 let element = e.target;
+	 *                 let someElementTypeCheck = element.getAttribute('data-my-attribute');
+	 *
+	 *                 if (elementTypeCheck) {
+	 *                     // perform action
+	 *                 }
+	 *             }
+	 *         }
+	 *     },
+	 *     onLaunch(options) {
+	 *         // navigate to menu page
+	 *         ATV.Navigation.navigateToMenuPage();
+	 *         // or you can navigate to previously created page
+	 *         // ATV.Navigation.navigate('login');
+	 *     }
+	 * });
+	 *
+	 * @inner
+	 * @alias module:ATV.start
+	 * @fires onLaunch
 	 *
 	 * @param  {Object} cfg 		Configuration options
 	 */
@@ -273,6 +434,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Reloads the application with the provided options and data.
 	 *
+	 * @example
+	 * ATV.reload({when: 'now'}, {customData});
+	 *
+	 * @inner
+	 * @alias module:ATV.reload
+	 * @fires onReload
+	 *
 	 * @param  {Object} [options]           Options value. {when: 'now'} // or 'onResume'
 	 * @param  {Object} [reloadData]        Custom data that needs to be passed while reloading the app
 	 */
@@ -288,8 +456,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 	/**
+	 * Dependency free publish/subscribe for JavaScript.
+	 * @external pubsub-js
+	 * @see https://github.com/mroderick/PubSubJS
+	 */
+
+	/**
 	 * A minimalistic JavaScript SDK for Apple TV application development.
-	 * It assumes the code is run in an environment where TVJS is present (or at least mocked).
+	 * It assumes the code is run in an environment where [TVMLKit JS]{@link https://developer.apple.com/documentation/tvmljs} is present (or at least mocked).
+	 *
+	 * @module ATV
+	 * @extends external:pubsub-js
+	 *
+	 * @fires onLaunch
+	 * @fires onError
+	 * @fires onResume
+	 * @fires onSuspend
+	 * @fires onExit
+	 * @fires onReload
 	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 */
@@ -7569,8 +7753,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
 
 	  function wrap(innerFn, outerFn, self, tryLocsList) {
-	    // If outerFn provided, then outerFn.prototype instanceof Generator.
-	    var generator = Object.create((outerFn || Generator).prototype);
+	    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+	    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+	    var generator = Object.create(protoGenerator.prototype);
 	    var context = new Context(tryLocsList || []);
 
 	    // The ._invoke method unifies the implementations of the .next,
@@ -8377,6 +8562,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	process.removeListener = noop;
 	process.removeAllListeners = noop;
 	process.emit = noop;
+	process.prependListener = noop;
+	process.prependOnceListener = noop;
+
+	process.listeners = function (name) { return [] }
 
 	process.binding = function (name) {
 	    throw new Error('process.binding is not supported');
@@ -21573,8 +21762,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Parses the given XML string or a function and returns a DOM
+	 *
+	 * @private
 	 * 
-	 * @param  {string|function} s      The template function or the string
+	 * @param  {String|Function} s      The template function or the string
 	 * @param  {Object} [data]          The data that will be applied to the function
 	 * @return {Document}               A new Document
 	 */
@@ -21596,13 +21787,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A minimalistic parsing wrapper library using the native DOMParser
 	 *
+	 * @module parser
+	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 */
 	exports.default = {
 	    /**
 	     * Parses the given XML string or a function and returns a DOM
-	     * 
-	     * @param  {string|function} s      The template function or the string
+	     *
+	     * @param  {String|Function} s      The template function or the string
 	     * @param  {Object} [data]          The data that will be applied to the function
 	     * @return {Document}               A new Document
 	     */
@@ -21625,7 +21818,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Default options for the ajax.
-	 * 
+	 *
+	 * @private
 	 * @type {Object}
 	 */
 	var defaults = {
@@ -21634,11 +21828,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * A function to perform ajax requests. It returns promise instead of relying on callbacks.
+	 *
+	 * @example
+	 * ATV.Ajax('http://api.mymovieapp.com/movies')
+	 *     .then((response) => // do something with the response)
+	 *     .catch((error) => // catch errors )
+	 *
+	 * @memberof module:ajax
 	 * 
-	 * @param  {String} url                 Resource url
-	 * @param  {Object} options             Options to apply for the ajax request
-	 * @param  {String} [method='GET']      Type of HTTP request (defaults to GET)
-	 * @return {Promise}                    The Promise that resolves on ajax success
+	 * @param  {String} url                                 Resource url
+	 * @param  {Object} [options={responseType: 'json'}]    Options to apply for the ajax request
+	 * @param  {String} [method='GET']                      Type of HTTP request (defaults to GET)
+	 * @return {Promise}                                     The Promise that resolves on ajax success
 	 */
 	function ajax(url, options) {
 	    var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'GET';
@@ -21700,40 +21901,62 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Object.assign(ajax, {
 	    /**
-	     * Perform an ajax ajax using HTTP GET
-	     * @param  {string} url         Resource url
-	     * @param  {Object} options     Ajax options
-	     * @return {Promise}            The Promise that resolves on ajax success
+	     * Perform an ajax request using HTTP GET
+	     *
+	     * @example
+	     * ATV.Ajax.get('http://api.mymovieapp.com/movies')
+	     *         .then((response) => // do something with the response)
+	     *         .catch((error) => // catch errors )
+	     *
+	     * @alias module:ajax.get
+	     *
+	     * @param  {string} url                         Resource url
+	     * @param  {Object} [options={@link defaults}]  Ajax options
+	     * @return {Promise}                            The Promise that resolves on ajax success
 	     */
 	    get: function get(url, options) {
 	        return ajax(url, options, 'GET');
 	    },
 
 	    /**
-	     * Perform an ajax ajax using HTTP POST
-	     * @param  {string} url         Resource url
-	     * @param  {Object} options     Ajax options
-	     * @return {Promise}            The Promise that resolves on ajax success
+	     * Perform an ajax request using HTTP POST
+	     *
+	     * @example
+	     * ATV.Ajax.post('http://api.mymovieapp.com/movies', {data})
+	     *         .then((response) => // do something with the response)
+	     *         .catch((error) => // catch errors )
+	     *
+	     * @alias module:ajax.post
+	     *
+	     * @param  {string} url                         Resource url
+	     * @param  {Object} [options={@link defaults}]  Ajax options
+	     * @return {Promise}                            The Promise that resolves on ajax success
 	     */
 	    post: function post(url, options) {
 	        return ajax(url, options, 'POST');
 	    },
 
 	    /**
-	     * Perform an ajax ajax using HTTP PUT
-	     * @param  {string} url         Resource url
-	     * @param  {Object} options     Ajax options
-	     * @return {Promise}            The Promise that resolves on ajax success
+	     * Perform an ajax request using HTTP PUT
+	     *
+	     * @alias module:ajax.put
+	     *
+	     * @param  {string} url                         Resource url
+	     * @param  {Object} [options={@link defaults}]  Ajax options
+	     * @return {Promise}                            The Promise that resolves on ajax success
 	     */
 	    put: function put(url, options) {
 	        return ajax(url, options, 'PUT');
 	    },
 
 	    /**
-	     * Perform an ajax ajax using HTTP DELETE
-	     * @param  {string} url         Resource url
-	     * @param  {Object} options     Ajax options
-	     * @return {Promise}            The Promise that resolves on ajax success
+	     * Perform an ajax request using HTTP DELETE
+	     *
+	     * @alias module:ajax.del
+	     *
+	     * @param  {string} url                         Resource url
+	     * @param  {Object} [options={@link defaults}]  Ajax options
+	     * @return {Promise}                            The Promise that resolves on ajax success
 	     */
 	    del: function del(url, options) {
 	        return ajax(url, options, 'DELETE');
@@ -21742,6 +21965,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * A very minimalistic AJAX implementation that returns promise instead of relying in callbacks.
+	 *
+	 * @module ajax
 	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 *
@@ -21778,6 +22003,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Created pages cache.
+	 *
+	 * @private
 	 * @type {Object}
 	 */
 	var pages = {};
@@ -21785,6 +22012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Page level defaults that needs to be overridden.
 	 *
+	 * @private
 	 * @type {Object}
 	 */
 	var defaults = {
@@ -21827,6 +22055,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Sets the default options for the page.
 	 *
+	 * @inner
+	 * @alias module:page.setOptions
+	 *
 	 * @param {Object} cfg The configuration object {defaults}
 	 */
 	function setOptions() {
@@ -21841,6 +22072,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Adds style to a document.
 	 *
 	 * @todo Check for existing style tag within the head of the provided document and append if exists
+	 *
+	 * @private
 	 *
 	 * @param  {String} style Style string
 	 * @param  {Document} doc   The document to add styles on
@@ -21864,7 +22097,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Prepares a document by adding styles and event handlers.
-	 * 
+	 *
+	 * @inner
+	 * @alias module:page.prepareDom
+	 *
 	 * @param  {Document} doc       The document to prepare
 	 * @return {Document}           The document passed
 	 */
@@ -21889,7 +22125,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * A helper method that calls the data method to transform the data.
 	 * It then creates a dom from the provided template and the final data.
 	 *
-	 * @private
+	 * @inner
+	 * @alias module:page.makeDom
+	 *
 	 * @param  {Object} cfg             Page configuration options
 	 * @param  {Object} response        The data object
 	 * @return {Document}               The newly created document
@@ -21916,8 +22154,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Generated a page function which returns a promise after invocation.
 	 *
 	 * @private
-	 * @param  {Object} cfg                             The page configuration object
-	 * @return {function(options: Object): Promise}     A function that returns promise upon execution
+	 *
+	 * @param  {Object} cfg     The page configuration object
+	 * @return {Function}       A function that returns promise upon execution
 	 */
 	function makePage(cfg) {
 	    return function (options) {
@@ -21959,66 +22198,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A minimalistic page creation library for Apple TV applications
 	 *
+	 * @module page
+	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 *
 	 */
 	exports.default = {
-	    /**
-	     * @type {setOptions}
-	     */
 	    setOptions: setOptions,
 	    /**
 	     * Create a page that can be later used for navigation.
 	     *
 	     * @example
-	     *      var homepage = create({
-	     *          name: 'homepage',
-	     *          url: 'path/to/server/api/',
-	     *          template(data) {
-	     *              // return a string here (preferably TVML)
-	     *          },
-	     *          data(d) {
-	     *              // do your data transformations here and return the final data
-	     *              // the transformed data will be passed on to your template function
-	     *          },
-	     *          options: {
-	     *              // ajax options
-	     *          },
-	     *          events: {
-	     *              // event maps and handlers on the configuration object
-	     *              'scroll': function(e) { // do the magic here },
-	     *              'select': 'onTitleSelect'
-	     *          },
-	     *          onError(response, xhr) {
-	     *              // perform the error handing
-	     *          },
-	     *          ready(options, resolve, reject) {
-	     *              // call resolve with the data to render the provided template
+	     * const homepage = create({
+	     *     name: 'homepage',
+	     *     url: 'path/to/server/api/',
+	     *     template(data) {
+	     *         // return a string here (preferably TVML)
+	     *     },
+	     *     data(d) {
+	     *         // do your data transformations here and return the final data
+	     *         // the transformed data will be passed on to your template function
+	     *     },
+	     *     options: {
+	     *         // ajax options
+	     *     },
+	     *     events: {
+	     *         // event maps and handlers on the configuration object
+	     *         'scroll': function(e) { // do the magic here },
+	     *         'select': 'onTitleSelect'
+	     *     },
+	     *     onError(response, xhr) {
+	     *         // perform the error handing
+	     *     },
+	     *     ready(options, resolve, reject) {
+	     *         // call resolve with the data to render the provided template
 	     *
-	     *              // you may also call resolve with null/falsy value to suppress rendering,
-	     *              // this is useful when you want full control of the page rendering
+	     *         // you may also call resolve with null/falsy value to suppress rendering,
+	     *         // this is useful when you want full control of the page rendering
 	     *
-	     *              // reject is not preferred, but you may still call it
+	     *         // reject is not preferred, but you may still call it
 	     *
-	     *              // any configuration options passed while calling the page method,
-	     *              // will be carried over to ready method at runtime
-	     *          },
-	     *          afterReady(doc) {
-	     *              // all your code that relies on a document object should go here
-	     *          },
-	     *          onTitleSelect(e) {
-	     *              // do the magic here
-	     *          }
-	     *      });
-	     *      homepage(options) -> promise that resolves to a document
+	     *         // any configuration options passed while calling the page method,
+	     *         // will be carried over to ready method at runtime
+	     *     },
+	     *     afterReady(doc) {
+	     *         // all your code that relies on a document object should go here
+	     *     },
+	     *     onTitleSelect(e) {
+	     *         // do the magic here
+	     *     }
+	     * });
+	     * homepage(options) -> promise that resolves to a document
 	     *
-	     *      (or if using the navigation class)
+	     * //(or if using the navigation class)
 	     *
-	     *      Navigation.navigate('homepage') -> promise that resolves on navigation
+	     * Navigation.navigate('homepage') -> promise that resolves on navigation
 	     *
-	     * @param  {String|Object} name                             Name of the page or the configuration options
-	     * @param  {Object} cfg                                     Page configuration options
-	     * @return {function(options: Object): Promise}             A function that returns promise upon execution
+	     * @param  {String|Object} name     Name of the page or the configuration options
+	     * @param  {Object} cfg             Page configuration options
+	     * @return {Function}               A function that returns promise upon execution
 	     */
 	    create: function create(name, cfg) {
 	        console.log('creating page... name:', name);
@@ -22052,6 +22290,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Returns the previously created page from the cache.
 	     *
+	     * @example
+	     * // create page
+	     * ATV.Page.create('homepage', { page configurations });
+	     * // later in the app
+	     * const homepage = ATV.Page.get('homepage');
+	     *
 	     * @param  {string} name    Name of the previously created page
 	     * @return {Page}           Page function
 	     */
@@ -22059,13 +22303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return pages[name];
 	    },
 
-	    /**
-	     * @type {prepareDom}
-	     */
 	    prepareDom: prepareDom,
-	    /**
-	     * @type {makeDom}
-	     */
 	    makeDom: makeDom
 	};
 
@@ -22100,10 +22338,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Page level default handlers.
 	 *
-	 * @type {Object}
-	 * @property {Object} select All the handlers associated to the select event.
+	 * @private
+	 * @type {Object<Object<Function>>}
 	 */
 	var handlers = {
+	    /**
+	     * All the handlers associated to the select event.
+	     * @type {Object}
+	     */
 	    select: {
 	        /**
 	         * A handler to allow declaring anchors to other pages in the TVML templates.
@@ -22216,6 +22458,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Sets the default handlers options
 	 *
+	 * @inner
+	 * @alias module:handler.setOptions
+	 *
 	 * @param {Object} cfg The configuration object {defaults}
 	 */
 	function setOptions() {
@@ -22230,19 +22475,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Iterates over the events configuration and add event listeners to the document.
 	 *
 	 * @example
-	 *     {
-	 *         events: {
-	 *             'scroll': function(e) { // do the magic here },
-	 *             'select listItemLockup title': 'onTitleSelect',
-	 *             'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
-	 *         },
-	 *         onTitleSelect: function(e) {
-	 *             // do the magic here
-	 *         }
+	 * {
+	 *     events: {
+	 *         'scroll': function(e) { // do the magic here },
+	 *         'select listItemLockup title': 'onTitleSelect',
+	 *         'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
+	 *     },
+	 *     onTitleSelect: function(e) {
+	 *         // do the magic here
 	 *     }
-	 * 
+	 * }
+	 *
 	 * @todo Implement querySelectorAll polyfill (it doesn't seem to exist on the xml document)
-	 * 
+	 *
+	 * @private
+	 *
 	 * @param {Document} doc            The document to add the listeners on.
 	 * @param {Object} cfg              The page object configuration.
 	 * @param {Boolean} [add=true]      Whether to add or remove listeners. Defaults to true (add)
@@ -22263,12 +22510,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var events = cfg.events;
 
 	        _.each(events, function (fns, e) {
-	            var _e$split = e.split(' ');
-
-	            var _e$split2 = _slicedToArray(_e$split, 2);
-
-	            var ev = _e$split2[0];
-	            var selector = _e$split2[1];
+	            var _e$split = e.split(' '),
+	                _e$split2 = _slicedToArray(_e$split, 2),
+	                ev = _e$split2[0],
+	                selector = _e$split2[1];
 
 	            var elements = null;
 	            if (!_.isArray(fns)) {
@@ -22300,20 +22545,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Syntactical sugar to {setListeners} with add=true
+	 * Iterates over the events configuration and add event listeners to the document.
 	 *
-	 * @param {Document} doc        The document to add the listeners on.
-	 * @param {Object} cfg          The page object configuration.
+	 * @example
+	 * ATV.Handler.addListeners(tvmlDoc,
+	 * {
+	 *     events: {
+	 *         'scroll': function(e) { // do the magic here },
+	 *         'select listItemLockup title': 'onTitleSelect',
+	 *         'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
+	 *     },
+	 *     onTitleSelect: function(e) {
+	 *         // do the magic here
+	 *     }
+	 * });
+	 *
+	 * @todo Implement querySelectorAll polyfill (it doesn't seem to exist on the xml document)
+	 *
+	 * @inner
+	 * @alias module:handler.addListeners
+	 *
+	 * @param {Document} doc            The document to add the listeners on.
+	 * @param {Object} cfg              The page object configuration.
 	 */
 	function addListeners(doc, cfg) {
 	    setListeners(doc, cfg, true);
 	}
 
 	/**
-	 * Syntactical sugar to {setListeners} with add=false
+	 * Iterates over the events configuration and remove event listeners from document.
 	 *
-	 * @param {Document} doc        The document to add the listeners on.
-	 * @param {Object} cfg          The page object configuration.
+	 * ATV.Handler.removeListeners(tvmlDoc,
+	 * {
+	 *     events: {
+	 *         'scroll': function(e) { // do the magic here },
+	 *         'select listItemLockup title': 'onTitleSelect',
+	 *         'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
+	 *     },
+	 *     onTitleSelect: function(e) {
+	 *         // do the magic here
+	 *     }
+	 * });
+	 * 
+	 * @todo Implement querySelectorAll polyfill (it doesn't seem to exist on the xml document)
+	 *
+	 * @inner
+	 * @alias module:handler.removeListeners
+	 *
+	 * @param {Document} doc            The document to add the listeners on.
+	 * @param {Object} cfg              The page object configuration.
 	 */
 	function removeListeners(doc, cfg) {
 	    setListeners(doc, cfg, false);
@@ -22323,6 +22603,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Iterates over the list of page level default handlers and set/unset listeners on the provided document.
 	 *
 	 * @private
+	 *
 	 * @param {Document} doc            The document to set/unset listeners on.
 	 * @param {Boolean} [add=true]      Whether to add or remove listeners. Defaults to true (add)
 	 */
@@ -22349,6 +22630,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Syntactical sugar to {setDefaultHandlers} with add=true
 	 *
+	 * @private
+	 *
 	 * @param {Document} doc        The document to add the listeners on.
 	 */
 	function addDefaultHandlers(doc) {
@@ -22358,6 +22641,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Syntactical sugar to {setDefaultHandlers} with add=false
 	 *
+	 * @private
+	 *
 	 * @param {Document} doc        The document to add the listeners on.
 	 */
 	function removeDefaultHandlers(doc) {
@@ -22366,7 +22651,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Sets/unsets the event handlers as per the event configuration.
-	 * Also adds/removes the default page level handlers.
+	 * Also adds/removes the [default page level handlers]{@link handlers}.
+	 *
+	 * @private
 	 * 
 	 * @param {Document}  doc           The page document.
 	 * @param {Obejct}  cfg             Page configuration object
@@ -22385,20 +22672,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Syntactical sugar to {setHandlers} with add=true
+	 * Sets the event handlers as per the event configuration.
+	 * Also adds the [default page level handlers]{@link handlers}.
 	 *
-	 * @param {Document} doc        The document to add the listeners on.
-	 * @param {Object} cfg          Page configuration object
+	 * @inner
+	 * @alias module:handler.addAll
+	 *
+	 * @param {Document}  doc           The page document.
+	 * @param {Obejct}  cfg             Page configuration object
 	 */
 	function addHandlers(doc, cfg) {
 	    setHandlers(doc, cfg, true);
 	}
 
 	/**
-	 * Syntactical sugar to {setHandlers} with add=false
+	 * Unset the event handlers as per the event configuration.
+	 * Also removes the [default page level handlers]{@link handlers}.
 	 *
-	 * @param {Document} doc        The document to add the listeners on.
-	 * @param {Object} cfg          Page configuration object
+	 * @inner
+	 * @alias module:handler.removeAll
+	 *
+	 * @param {Document}  doc           The page document.
+	 * @param {Obejct}  cfg             Page configuration object
 	 */
 	function removeHandlers(doc, cfg) {
 	    setHandlers(doc, cfg, false);
@@ -22407,33 +22702,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A minimalistic Event handling library for Apple TV applications
 	 *
+	 * @module handler
+	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 *
 	 */
 	exports.default = {
-	    /**
-	     * @type {setOptions}
-	     */
 	    setOptions: setOptions,
-	    /**
-	     * Adds an event listener to the document with event configuration options.
-	     * @type {addListener}
-	     */
 	    addListeners: addListeners,
-	    /**
-	     * Removes previously added listeners from the document having event configuration options.
-	     * @type {[type]}
-	     */
 	    removeListeners: removeListeners,
-	    /**
-	     * Adds all the event listeners from the document including the default ones.
-	     * @type {addHandlers}
-	     */
 	    addAll: addHandlers,
-	    /**
-	     * Removes all the event listeners from the document including the default ones.
-	     * @type {removeHandlers}
-	     */
 	    removeAll: removeHandlers
 	};
 
@@ -22471,11 +22749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var errorDoc = null;
 	var modalDoc = null;
 
-	/**
-	 * Default options.
-	 *
-	 * @type {Object}
-	 */
+	// default options
 	var defaults = {
 	    templates: {
 	        status: {}
@@ -22485,6 +22759,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Sets the default options for navigation.
 	 *
+	 * @inner
+	 * @alias module:navigation.setOptions
 	 * @param {Object} cfg The configuration object {defaults}
 	 */
 	function setOptions() {
@@ -22498,6 +22774,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Get a loader document.
 	 *
+	 * @inner
+	 * @alias module:navigation.getLoaderDoc
+	 *
 	 * @param  {String} message         Loading message
 	 * @return {Document}               A newly created loader document
 	 */
@@ -22510,6 +22789,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Get an error document.
+	 *
+	 * @inner
+	 * @alias module:navigation.getErrorDoc
 	 *
 	 * @param  {Object|String} message          Error page configuration or error message
 	 * @return {Document}                       A newly created error document
@@ -22533,6 +22815,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Gets the topmost document from the navigationDocument stack
+	 *
+	 * @private
 	 *
 	 * @return {Document} The document
 	 */
@@ -22567,6 +22851,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Helper function to perform navigation after applying the page level default handlers
 	 *
+	 * @private
+	 *
 	 * @param  {Object} cfg         The configurations
 	 * @return {Document}           The created document
 	 */
@@ -22600,6 +22886,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Shows a loading page if a loader template exists.
 	 * Also applies any default handlers and caches the document for later use.
 	 *
+	 * @inner
+	 * @alias module:navigation.showLoading
+	 *
 	 * @param  {Object|Function} cfg    The configuration options or the template function
 	 * @return {Document}               The created loader document.
 	 */
@@ -22630,6 +22919,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Shows the error page using the existing error template.
 	 * Also applies any default handlers and caches the document for later use.
+	 *
+	 * @inner
+	 * @alias module:navigation.showError
 	 *
 	 * @param  {Object|Function|Boolean} cfg    The configuration options or the template function or boolean to hide the error
 	 * @return {Document}                       The created error document.
@@ -22666,6 +22958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Pushes a given document to the navigation stack after applying all the default page level handlers.
 	 *
 	 * @private
+	 *
 	 * @param  {Document} doc       The document to push to the navigation stack
 	 */
 	function pushDocument(doc) {
@@ -22680,7 +22973,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Replaces a document on the navigation stack with the provided new document.
 	 * Also adds the page level default handlers to the new document and removes the existing handlers from the document that is to be replaced.
 	 *
-	 * @private
+	 * @inner
+	 * @alias module:navigation.replaceDocument
+	 *
 	 * @param  {Document} doc               The document to push
 	 * @param  {Document} docToReplace      The document to replace
 	 */
@@ -22694,6 +22989,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Performs a navigation by checking the existing document stack to see if any error or loader page needs to be replaced from the current stack
+	 *
+	 * @private
 	 *
 	 * @param   {Document} doc              The document that needs to be pushed on to the navigation stack
 	 * @param   {Boolean} [replace=false]   Whether to replace the last document from the navigation stack
@@ -22732,6 +23029,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Navigates to the menu page if it exists
 	 *
+	 * @inner
+	 * @alias module:navigation.navigateToMenuPage
+	 *
 	 * @return {Promise}      Returns a Promise that resolves upon successful navigation.
 	 */
 	function navigateToMenuPage() {
@@ -22754,6 +23054,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Navigates to the provided page if it exists in the list of available pages.
+	 *
+	 * @inner
+	 * @alias module:navigation.navigate
 	 *
 	 * @param  {String} page        Name of the previously created page.
 	 * @param  {Object} options     The options that will be passed on to the page during runtime.
@@ -22834,6 +23137,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Shows a modal. Closes the previous modal before showing a new modal.
 	 *
+	 * @inner
+	 * @alias module:navigation.presentModal
+	 *
 	 * @param  {Document|String|Object} modal       The TVML string/document representation of the modal window or a configuration object to create modal from
 	 * @return {Document}                           The created modal document
 	 */
@@ -22854,6 +23160,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Dismisses the current modal window.
 	 *
+	 * @inner
+	 * @alias module:navigation.dismissModal
 	 */
 	function dismissModal() {
 	    navigationDocument.dismissModal();
@@ -22863,6 +23171,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Clears the navigation stack.
 	 *
+	 * @inner
+	 * @alias module:navigation.clear
 	 */
 	function clear() {
 	    loaderDoc = null;
@@ -22872,6 +23182,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Pops the recent document or pops all document before the provided document.
+	 *
+	 * @inner
+	 * @alias module:navigation.pop
 	 *
 	 * @param  {Document} [doc]     The document until which we need to pop.
 	 */
@@ -22890,6 +23203,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Goes back in history.
 	 *
+	 * @inner
+	 * @alias module:navigation.back
 	 */
 	function back() {
 	    if (getLastDocumentFromStack()) {
@@ -22900,6 +23215,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Removes the current active document from the stack.
 	 *
+	 * @inner
+	 * @alias module:navigation.removeActiveDocument
 	 */
 	function removeActiveDocument() {
 	    var doc = getActiveDocument();
@@ -22909,73 +23226,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A minimalistic Navigation library for Apple TV applications
 	 *
+	 * @module navigation
+	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 *
 	 */
 	exports.default = {
+	    /**
+	     * Returns the topmost document from the navigation stack.
+	     * @return {Document} TVML Document
+	     */
 	    get currentDocument() {
 	        return getLastDocumentFromStack();
 	    },
 	    set currentDocument(doc) {},
+	    /**
+	     * Returns the current active document presented on the UI.
+	     *
+	     * Note: This is just a wrapper to the TVMLKit JS [getActiveDocument]{@linkcode https://developer.apple.com/documentation/tvmljs/1627314-getactivedocument} method.
+	     * @return {Document} TVML Document
+	     */
 	    get activeDocument() {
 	        return getActiveDocument();
 	    },
 	    set activeDocument(doc) {},
-	    /**
-	     * @type {setOptions}
-	     */
 	    setOptions: setOptions,
-	    /**
-	     * @type {navigate}
-	     */
 	    navigate: navigate,
-	    /**
-	     * @type {navigateToMenuPage}
-	     */
 	    navigateToMenuPage: navigateToMenuPage,
-	    /**
-	     * @type {getLoaderDoc}
-	     */
 	    getLoaderDoc: getLoaderDoc,
-	    /**
-	     * @type {getErrorDoc}
-	     */
 	    getErrorDoc: getErrorDoc,
-	    /**
-	     * @type {showLoading}
-	     */
 	    showLoading: showLoading,
-	    /**
-	     * @type {showError}
-	     */
 	    showError: showError,
-	    /**
-	     * @type {presentModal}
-	     */
 	    presentModal: presentModal,
-	    /**
-	     * @type {dismissModal}
-	     */
 	    dismissModal: dismissModal,
-	    /**
-	     * @type {clear}
-	     */
 	    clear: clear,
-	    /**
-	     * @type {back}
-	     */
 	    back: back,
-	    /**
-	     * @type {pop}
-	     */
 	    pop: pop,
-	    /**
-	     * @type {removeActiveDocument}
-	     */
 	    removeActiveDocument: removeActiveDocument,
-	    /**
-	     * @type {replaceDocument}
-	     */
 	    replaceDocument: replaceDocument
 	};
 
@@ -23020,7 +23307,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Sets the default menu options
 	 *
-	 * @param {Object} cfg The configuration object {defaults}
+	 * @inner
+	 * @alias module:menu.setOptions
+	 *
+	 * @param {Object} cfg The configuration object
 	 */
 	function setOptions() {
 	    var cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -23032,6 +23322,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Iterates and sets attributes to an element.
+	 *
+	 * @private
 	 * 
 	 * @param {Element} el 			The element to set attributes on
 	 * @param {Object} attributes 	Attributes key value pairs.
@@ -23045,6 +23337,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Returns instance of the menu document (auto create if not already created)
+	 *
+	 * @inner
+	 * @alias module:menu.get
 	 * 
 	 * @return {Document}		Instance of the created menu document.
 	 */
@@ -23057,6 +23352,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Adds menu item to the menu document.
+	 *
+	 * @private
 	 * 
 	 * @param {Object} item 	The configuration realted to the menu item.
 	 */
@@ -23088,6 +23385,34 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Generates a menu from the configuration obejct.
+	 *
+	 * @example
+	 * ATV.Menu.create({
+	 *     attributes: {},
+	 *     items: [{
+	 *         id: 'search',
+	 *         name: 'Search',
+	 *         page: SearchPage
+	 *     }, {
+	 *         id: 'homepage',
+	 *         name: 'Home',
+	 *         page: HomePage,
+	 *         attributes: {
+	 *             autoHighlight: true // auto highlight on navigate
+	 *         }
+	 *     }, {
+	 *         id: 'movies',
+	 *         name: 'Movies',
+	 *         page: MoviesPage
+	 *     }, {
+	 *         id: 'tvshows',
+	 *         name: 'TV Shows',
+	 *         page: TVShowsPage
+	 *     }]
+	 * });
+	 *
+	 * @inner
+	 * @alias module:menu.create
 	 * 
 	 * @param  {Object} cfg 		Menu related configurations
 	 * @return {Document}     		The created menu document
@@ -23118,6 +23443,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Associate a document to the menuitem (using the menuitem's unique id).
+	 *
+	 * @inner
+	 * @alias module:menu.setDocument
 	 * 
 	 * @param {Document} doc        	The document to associate with the menuitem
 	 * @param {String} menuItemid		The id of the menu item as per the configuration
@@ -23134,6 +23462,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	 * Set the given menuitem as active (using the menuitem's unique id).
+	 *
+	 * @inner
+	 * @alias module:menu.setSelectedItem
 	 * 
 	 * @param {String} menuItemid 		The id of the menu item as per the configuration
 	 */
@@ -23150,10 +23481,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A very minimalistic library to manage Apple TV menu bars.
 	 *
+	 * @module menu
+	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 *
 	 */
 	exports.default = {
+	    /**
+	     * Whether the menu was already created.
+	     * @return {Boolean} Created
+	     */
 	    get created() {
 	        return created;
 	    },
@@ -23163,9 +23500,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    get: get,
 	    setDocument: setDocument,
 	    setSelectedItem: setSelectedItem,
+	    /**
+	     * Get the menu loading message if provided in the config
+	     * @return {String} Loading message
+	     */
 	    getLoadingMessage: function getLoadingMessage() {
 	        return _lodash2.default.isFunction(defaults.loadingMessage) ? defaults.loadingMessage() : defaults.loadingMessage;
 	    },
+
+	    /**
+	     * Get the menu error message if provided in the config
+	     * @return {String} Error message
+	     */
 	    getErrorMessage: function getErrorMessage() {
 	        return _lodash2.default.isFunction(defaults.errorMessage) ? defaults.errorMessage() : defaults.errorMessage;
 	    }
@@ -23194,6 +23540,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var lib = {
 		/**
 	  * Sets a value for the given key in the localStorage (supports storing object values).
+	  * Uses [LZString Compression]{@link external:LZString} to store significantly large amount of data.
+	  *
+	  * @inner
+	  * @alias module:settings.set
 	  * 
 	  * @param {String} key 				The key
 	  * @param {Object|String} val 		The value to store
@@ -23212,6 +23562,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		/**
 	  * Returns a value for the specified key
 	  * 
+	  * @inner
+	  * @alias module:settings.get
+	  *
 	  * @param  {String} key 		The key
 	  * @return {Object|String}     	The stored value
 	  */
@@ -23232,6 +23585,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		/**
 	  * Removes the given key(s) from the localStorage.
+	  *
+	  * @inner
+	  * @alias module:settings.remove
 	  * 
 	  * @param  {String|Array} keys 		The key(s) to remove.
 	  */
@@ -23249,7 +23605,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	_lodash2.default.assign(Settings, lib);
 
 	/**
-	 * A wrapper for the Apple TV settings object that has getters and setters using localstorage
+	 * A Settings class instance provides access settings information for Apple TV device.
+	 * @external Settings
+	 * @see https://developer.apple.com/documentation/tvmljs/settings
+	 */
+
+	/**
+	 * LZ-based compression algorithm for JavaScript
+	 * @external LZString
+	 * @see https://github.com/pieroxy/lz-string/
+	 */
+
+	/**
+	 * A wrapper for the Apple TV settings object that has getters and setters using localstorage.
+	 * The settings are persisted even on app exits and relaunch.
+	 *
+	 * @module settings
+	 * @extends external:Settings
 	 *
 	 * @author eMAD <emad.alam@yahoo.com>
 	 *
