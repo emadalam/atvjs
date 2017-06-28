@@ -28,54 +28,63 @@ let started = false;
 // all libraries
 let libs = {
     /**
-     * Internal alias to lodash library
-     * @type {https://github.com/lodash/lodash}
+     * Internal alias to [lodash]{@link https://github.com/lodash/lodash} library
+     * @alias module:ATV._
      */
     _: _,
     /**
-     * Internal alias to lz-string compression library
-     * @type {https://github.com/pieroxy/lz-string/}
+     * Internal alias to [lz-string compression]{@link https://github.com/pieroxy/lz-string/} library
+     * @alias module:ATV.LZString
      */
     LZString: LZString,
     /**
      * Ajax wrapper using Promises
-     * @type {./ajax.js}
+     * @alias module:ATV.Ajax
+     * @type {module:ajax}
      */
     Ajax: Ajax,
     /**
      * Page level navigation methods.
-     * @type {./navigation.js}
+     * @alias module:ATV.Navigation
+     * @type {module:navigation}
      */
     Navigation: Navigation,
     /**
      * Page Creation
-     * @type {./page.js}
+     * @alias module:ATV.Page
+     * @type {module:page}
      */
     Page: Page,
     /**
      * A minimalistic parser wrapper using the builtin DOMParser
-     * @type {./parser.js}
+     * @alias module:ATV.Parser
+     * @type {module:parser}
      */
     Parser: Parser,
     /**
      * Basic event handling including some default ones
-     * @type {./handler.js}
+     * @alias module:ATV.Handler
+     * @type {module:handler}
      */
     Handler: Handler,
     /**
      * Apple TV settings object with some basic helpers
-     * @type {./settings.js}
+     * @alias module:ATV.Settings
+     * @type {module:settings}
      */
     Settings: Settings,
     /**
      * TVML menu template creation with few utility methods
-     * @type {./menu.js}
+     * @alias module:ATV.Menu
+     * @type {module:menu}
      */
     Menu: Menu
 };
 
 /**
  * Iterates over each libraries and call setOptions with the relevant options.
+ *
+ * @private
  *
  * @param  {Object} cfg 	All configuration options relevant to the libraries
  */
@@ -90,27 +99,63 @@ function initLibraries(cfg = {}) {
 
 // all supported Apple TV App level handlers
 const handlers = {
+    /**
+     * App launch event
+     *
+     * @event onLaunch
+     * @alias module:ATV#onLaunch
+     */
     onLaunch(options = {}, fn) {
         libs.launchOptions = options;
         console.log('launching application...');
         fn(options);
     },
+    /**
+     * App error event
+     *
+     * @event onError
+     * @alias module:ATV#onError
+     */
     onError(options = {}, fn) {
         console.log('an error occurred in the application...')
         fn(options);
     },
+    /**
+     * App resume event
+     *
+     * @event onResume
+     * @alias module:ATV#onResume
+     */
     onResume(options = {}, fn) {
         console.log('resuming application...');
         fn(options);
     },
+    /**
+     * App suspend event
+     *
+     * @event onSuspend
+     * @alias module:ATV#onSuspend
+     */
     onSuspend(options = {}, fn) {
         console.log('suspending application...');
         fn(options);
     },
+    /**
+     * App exit event
+     *
+     * @event onExit
+     * @alias module:ATV#onExit
+     */
     onExit(options = {}, fn) {
         console.log('exiting application...');
         fn(options);
     },
+    /**
+     * App reload event
+     *
+     * @event onReload
+     * @alias module:ATV#onReload
+     */
     onReload(options = {}, fn) {
         console.log('reloading application...');
         fn(options);
@@ -120,6 +165,8 @@ const handlers = {
 /**
  * Iterates over each supported handler types and attach it on the Apple TV App object.
  *
+ * @private
+ *
  * @param  {Object} cfg 	All configuration options relevant to the App.
  */
 function initAppHandlers (cfg = {}) {
@@ -128,6 +175,115 @@ function initAppHandlers (cfg = {}) {
 
 /**
  * Starts the Apple TV application after applying the relevant configuration options
+ *
+ * @example
+ * // create your pages
+ * let SearchPage = ATV.Page.create({ page configurations });
+ * let HomePage = ATV.Page.create({ page configurations });
+ * let MoviesPage = ATV.Page.create({ page configurations });
+ * let TVShowsPage = ATV.Page.create({ page configurations });
+ * let LoginPage = ATV.Page.create({ page configurations });
+ *
+ * // template functions
+ * const loaderTpl = (data) => `<document>
+ *     <loadingTemplate>
+ *         <activityIndicator>
+ *             <title>${data.message}</title>
+ *         </activityIndicator>
+ *     </loadingTemplate>
+ * </document>`;
+ *
+ * const errorTpl = (data) => `<document>
+ *     <descriptiveAlertTemplate>
+ *           <title>${data.title}</title>
+ *           <description>${data.message}</description>
+ *       </descriptiveAlertTemplate>
+ *   </document>`;
+ *
+ * // Global TVML styles
+ * let globalStyles = `
+ * .text-bold {
+ *     font-weight: bold;
+ * }
+ * .text-white {
+ *     color: rgb(255, 255, 255);
+ * }
+ * .dark-background-color {
+ *     background-color: #091a2a;
+ * }
+ * .button {
+ *     background-color: rgba(0, 0, 0, 0.1);
+ *     tv-tint-color: rgba(0, 0, 0, 0.1);
+ * }
+ * `;
+ *
+ * // start your application by passing configurations
+ * ATV.start({
+ *     style: globalStyles,
+ *     menu: {
+ *         attributes: {},
+ *         items: [{
+ *             id: 'search',
+ *             name: 'Search',
+ *             page: SearchPage
+ *         }, {
+ *             id: 'homepage',
+ *             name: 'Home',
+ *             page: HomePage,
+ *             attributes: {
+ *                 autoHighlight: true // auto highlight on navigate
+ *             }
+ *         }, {
+ *             id: 'movies',
+ *             name: 'Movies',
+ *             page: MoviesPage
+ *         }, {
+ *             id: 'tvshows',
+ *             name: 'TV Shows',
+ *             page: TVShowsPage
+ *         }]
+ *     },
+ *     templates: {
+ *         // loader template
+ *         loader: loaderTpl,
+ *         // global error template
+ *         error: errorTpl,
+ *         // xhr status based error messages
+ *         status: {
+ *             '404': () => errorTpl({
+ *                 title: '404',
+ *                 message: 'The given page was not found'
+ *             }),
+ *             '500': () => errorTpl({
+ *                 title: '500',
+ *                 message: 'An unknown error occurred, please try again later!'
+ *             })
+ *         }
+ *     },
+ *     // global event handlers that will be called for each of the pages
+ *     handlers: {
+ *         select: {
+ *             globalSelecthandler(e) {
+ *                 let element = e.target;
+ *                 let someElementTypeCheck = element.getAttribute('data-my-attribute');
+ *
+ *                 if (elementTypeCheck) {
+ *                     // perform action
+ *                 }
+ *             }
+ *         }
+ *     },
+ *     onLaunch(options) {
+ *         // navigate to menu page
+ *         ATV.Navigation.navigateToMenuPage();
+ *         // or you can navigate to previously created page
+ *         // ATV.Navigation.navigate('login');
+ *     }
+ * });
+ *
+ * @inner
+ * @alias module:ATV.start
+ * @fires onLaunch
  *
  * @param  {Object} cfg 		Configuration options
  */
@@ -150,6 +306,13 @@ function start(cfg = {}) {
 /**
  * Reloads the application with the provided options and data.
  *
+ * @example
+ * ATV.reload({when: 'now'}, {customData});
+ *
+ * @inner
+ * @alias module:ATV.reload
+ * @fires onReload
+ *
  * @param  {Object} [options]           Options value. {when: 'now'} // or 'onResume'
  * @param  {Object} [reloadData]        Custom data that needs to be passed while reloading the app
  */
@@ -165,8 +328,24 @@ _.assign(libs, PubSub, {
 });
 
 /**
+ * Dependency free publish/subscribe for JavaScript.
+ * @external pubsub-js
+ * @see https://github.com/mroderick/PubSubJS
+ */
+
+/**
  * A minimalistic JavaScript SDK for Apple TV application development.
- * It assumes the code is run in an environment where TVJS is present (or at least mocked).
+ * It assumes the code is run in an environment where [TVMLKit JS]{@link https://developer.apple.com/documentation/tvmljs} is present (or at least mocked).
+ *
+ * @module ATV
+ * @extends external:pubsub-js
+ *
+ * @fires onLaunch
+ * @fires onError
+ * @fires onResume
+ * @fires onSuspend
+ * @fires onExit
+ * @fires onReload
  *
  * @author eMAD <emad.alam@yahoo.com>
  */

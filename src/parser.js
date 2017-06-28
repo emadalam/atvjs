@@ -4,8 +4,10 @@ const xmlPrefix = '<?xml version="1.0" encoding="UTF-8" ?>'; // xml prefix
 
 /**
  * Parses the given XML string or a function and returns a DOM
+ *
+ * @private
  * 
- * @param  {string|function} s      The template function or the string
+ * @param  {String|Function} s      The template function or the string
  * @param  {Object} [data]          The data that will be applied to the function
  * @return {Document}               A new Document
  */
@@ -27,13 +29,15 @@ function parse(s, data) {
 /**
  * A minimalistic parsing wrapper library using the native DOMParser
  *
+ * @module parser
+ *
  * @author eMAD <emad.alam@yahoo.com>
  */
 export default {
     /**
      * Parses the given XML string or a function and returns a DOM
-     * 
-     * @param  {string|function} s      The template function or the string
+     *
+     * @param  {String|Function} s      The template function or the string
      * @param  {Object} [data]          The data that will be applied to the function
      * @return {Document}               A new Document
      */

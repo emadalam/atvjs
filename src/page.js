@@ -5,6 +5,8 @@ import Handler from './handler';
 
 /**
  * Created pages cache.
+ *
+ * @private
  * @type {Object}
  */
 let pages = {};
@@ -12,6 +14,7 @@ let pages = {};
 /**
  * Page level defaults that needs to be overridden.
  *
+ * @private
  * @type {Object}
  */
 const defaults = {
@@ -52,6 +55,9 @@ const defaults = {
 /**
  * Sets the default options for the page.
  *
+ * @inner
+ * @alias module:page.setOptions
+ *
  * @param {Object} cfg The configuration object {defaults}
  */
 function setOptions(cfg = {}) {
@@ -64,6 +70,8 @@ function setOptions(cfg = {}) {
  * Adds style to a document.
  *
  * @todo Check for existing style tag within the head of the provided document and append if exists
+ *
+ * @private
  *
  * @param  {String} style Style string
  * @param  {Document} doc   The document to add styles on
@@ -87,7 +95,10 @@ function appendStyle(style, doc) {
 
 /**
  * Prepares a document by adding styles and event handlers.
- * 
+ *
+ * @inner
+ * @alias module:page.prepareDom
+ *
  * @param  {Document} doc       The document to prepare
  * @return {Document}           The document passed
  */
@@ -110,7 +121,9 @@ function prepareDom(doc, cfg = {}) {
  * A helper method that calls the data method to transform the data.
  * It then creates a dom from the provided template and the final data.
  *
- * @private
+ * @inner
+ * @alias module:page.makeDom
+ *
  * @param  {Object} cfg             Page configuration options
  * @param  {Object} response        The data object
  * @return {Document}               The newly created document
@@ -137,8 +150,9 @@ function makeDom(cfg, response) {
  * Generated a page function which returns a promise after invocation.
  *
  * @private
- * @param  {Object} cfg                             The page configuration object
- * @return {function(options: Object): Promise}     A function that returns promise upon execution
+ *
+ * @param  {Object} cfg     The page configuration object
+ * @return {Function}       A function that returns promise upon execution
  */
 function makePage(cfg) {
     return (options) => {
@@ -177,66 +191,65 @@ function makePage(cfg) {
 /**
  * A minimalistic page creation library for Apple TV applications
  *
+ * @module page
+ *
  * @author eMAD <emad.alam@yahoo.com>
  *
  */
 export default {
-    /**
-     * @type {setOptions}
-     */
     setOptions: setOptions,
     /**
      * Create a page that can be later used for navigation.
      *
      * @example
-     *      var homepage = create({
-     *          name: 'homepage',
-     *          url: 'path/to/server/api/',
-     *          template(data) {
-     *              // return a string here (preferably TVML)
-     *          },
-     *          data(d) {
-     *              // do your data transformations here and return the final data
-     *              // the transformed data will be passed on to your template function
-     *          },
-     *          options: {
-     *              // ajax options
-     *          },
-     *          events: {
-     *              // event maps and handlers on the configuration object
-     *              'scroll': function(e) { // do the magic here },
-     *              'select': 'onTitleSelect'
-     *          },
-     *          onError(response, xhr) {
-     *              // perform the error handing
-     *          },
-     *          ready(options, resolve, reject) {
-     *              // call resolve with the data to render the provided template
+     * const homepage = create({
+     *     name: 'homepage',
+     *     url: 'path/to/server/api/',
+     *     template(data) {
+     *         // return a string here (preferably TVML)
+     *     },
+     *     data(d) {
+     *         // do your data transformations here and return the final data
+     *         // the transformed data will be passed on to your template function
+     *     },
+     *     options: {
+     *         // ajax options
+     *     },
+     *     events: {
+     *         // event maps and handlers on the configuration object
+     *         'scroll': function(e) { // do the magic here },
+     *         'select': 'onTitleSelect'
+     *     },
+     *     onError(response, xhr) {
+     *         // perform the error handing
+     *     },
+     *     ready(options, resolve, reject) {
+     *         // call resolve with the data to render the provided template
      *
-     *              // you may also call resolve with null/falsy value to suppress rendering,
-     *              // this is useful when you want full control of the page rendering
+     *         // you may also call resolve with null/falsy value to suppress rendering,
+     *         // this is useful when you want full control of the page rendering
      *
-     *              // reject is not preferred, but you may still call it
+     *         // reject is not preferred, but you may still call it
      *
-     *              // any configuration options passed while calling the page method,
-     *              // will be carried over to ready method at runtime
-     *          },
-     *          afterReady(doc) {
-     *              // all your code that relies on a document object should go here
-     *          },
-     *          onTitleSelect(e) {
-     *              // do the magic here
-     *          }
-     *      });
-     *      homepage(options) -> promise that resolves to a document
+     *         // any configuration options passed while calling the page method,
+     *         // will be carried over to ready method at runtime
+     *     },
+     *     afterReady(doc) {
+     *         // all your code that relies on a document object should go here
+     *     },
+     *     onTitleSelect(e) {
+     *         // do the magic here
+     *     }
+     * });
+     * homepage(options) -> promise that resolves to a document
      *
-     *      (or if using the navigation class)
+     * //(or if using the navigation class)
      *
-     *      Navigation.navigate('homepage') -> promise that resolves on navigation
+     * Navigation.navigate('homepage') -> promise that resolves on navigation
      *
-     * @param  {String|Object} name                             Name of the page or the configuration options
-     * @param  {Object} cfg                                     Page configuration options
-     * @return {function(options: Object): Promise}             A function that returns promise upon execution
+     * @param  {String|Object} name     Name of the page or the configuration options
+     * @param  {Object} cfg             Page configuration options
+     * @return {Function}               A function that returns promise upon execution
      */
     create(name, cfg) {
         console.log('creating page... name:', name);
@@ -269,18 +282,18 @@ export default {
     /**
      * Returns the previously created page from the cache.
      *
+     * @example
+     * // create page
+     * ATV.Page.create('homepage', { page configurations });
+     * // later in the app
+     * const homepage = ATV.Page.get('homepage');
+     *
      * @param  {string} name    Name of the previously created page
      * @return {Page}           Page function
      */
     get(name) {
         return pages[name];
     },
-    /**
-     * @type {prepareDom}
-     */
     prepareDom: prepareDom,
-    /**
-     * @type {makeDom}
-     */
     makeDom: makeDom
 };

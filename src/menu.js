@@ -22,7 +22,10 @@ let defaults = {
 /**
  * Sets the default menu options
  *
- * @param {Object} cfg The configuration object {defaults}
+ * @inner
+ * @alias module:menu.setOptions
+ *
+ * @param {Object} cfg The configuration object
  */
 function setOptions(cfg = {}) {
     console.log('setting menu options...', cfg);
@@ -32,6 +35,8 @@ function setOptions(cfg = {}) {
 
 /**
  * Iterates and sets attributes to an element.
+ *
+ * @private
  * 
  * @param {Element} el 			The element to set attributes on
  * @param {Object} attributes 	Attributes key value pairs.
@@ -43,6 +48,9 @@ function setAttributes(el, attributes) {
 
 /**
  * Returns instance of the menu document (auto create if not already created)
+ *
+ * @inner
+ * @alias module:menu.get
  * 
  * @return {Document}		Instance of the created menu document.
  */
@@ -55,6 +63,8 @@ function get() {
 
 /**
  * Adds menu item to the menu document.
+ *
+ * @private
  * 
  * @param {Object} item 	The configuration realted to the menu item.
  */
@@ -84,6 +94,34 @@ function addItem(item = {}) {
 
 /**
  * Generates a menu from the configuration obejct.
+ *
+ * @example
+ * ATV.Menu.create({
+ *     attributes: {},
+ *     items: [{
+ *         id: 'search',
+ *         name: 'Search',
+ *         page: SearchPage
+ *     }, {
+ *         id: 'homepage',
+ *         name: 'Home',
+ *         page: HomePage,
+ *         attributes: {
+ *             autoHighlight: true // auto highlight on navigate
+ *         }
+ *     }, {
+ *         id: 'movies',
+ *         name: 'Movies',
+ *         page: MoviesPage
+ *     }, {
+ *         id: 'tvshows',
+ *         name: 'TV Shows',
+ *         page: TVShowsPage
+ *     }]
+ * });
+ *
+ * @inner
+ * @alias module:menu.create
  * 
  * @param  {Object} cfg 		Menu related configurations
  * @return {Document}     		The created menu document
@@ -110,6 +148,9 @@ function create(cfg = {}) {
 
 /**
  * Associate a document to the menuitem (using the menuitem's unique id).
+ *
+ * @inner
+ * @alias module:menu.setDocument
  * 
  * @param {Document} doc        	The document to associate with the menuitem
  * @param {String} menuItemid		The id of the menu item as per the configuration
@@ -126,6 +167,9 @@ function setDocument(doc, menuItemid) {
 
 /**
  * Set the given menuitem as active (using the menuitem's unique id).
+ *
+ * @inner
+ * @alias module:menu.setSelectedItem
  * 
  * @param {String} menuItemid 		The id of the menu item as per the configuration
  */
@@ -142,10 +186,16 @@ function setSelectedItem(menuItemid) {
 /**
  * A very minimalistic library to manage Apple TV menu bars.
  *
+ * @module menu
+ *
  * @author eMAD <emad.alam@yahoo.com>
  *
  */
 export default {
+    /**
+     * Whether the menu was already created.
+     * @return {Boolean} Created
+     */
     get created() { return created; },
     set created(val) { },
     setOptions: setOptions,
@@ -153,9 +203,17 @@ export default {
     get: get,
     setDocument: setDocument,
     setSelectedItem: setSelectedItem,
+    /**
+     * Get the menu loading message if provided in the config
+     * @return {String} Loading message
+     */
     getLoadingMessage() {
     	return (_.isFunction(defaults.loadingMessage) ? defaults.loadingMessage() : defaults.loadingMessage);
     },
+    /**
+     * Get the menu error message if provided in the config
+     * @return {String} Error message
+     */
     getErrorMessage(){
         return (_.isFunction(defaults.errorMessage) ? defaults.errorMessage() : defaults.errorMessage);
     }

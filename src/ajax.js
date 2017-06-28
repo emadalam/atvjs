@@ -1,6 +1,7 @@
 /**
  * Default options for the ajax.
- * 
+ *
+ * @private
  * @type {Object}
  */
 const defaults = {
@@ -9,11 +10,18 @@ const defaults = {
 
 /**
  * A function to perform ajax requests. It returns promise instead of relying on callbacks.
+ *
+ * @example
+ * ATV.Ajax('http://api.mymovieapp.com/movies')
+ *     .then((response) => // do something with the response)
+ *     .catch((error) => // catch errors )
+ *
+ * @memberof module:ajax
  * 
- * @param  {String} url                 Resource url
- * @param  {Object} options             Options to apply for the ajax request
- * @param  {String} [method='GET']      Type of HTTP request (defaults to GET)
- * @return {Promise}                    The Promise that resolves on ajax success
+ * @param  {String} url                                 Resource url
+ * @param  {Object} [options={responseType: 'json'}]    Options to apply for the ajax request
+ * @param  {String} [method='GET']                      Type of HTTP request (defaults to GET)
+ * @return {Promise}                                     The Promise that resolves on ajax success
  */
 function ajax(url, options, method = 'GET') {
     if (typeof url == 'undefined') {
@@ -75,37 +83,59 @@ function ajax(url, options, method = 'GET') {
 
 Object.assign(ajax, {
     /**
-     * Perform an ajax ajax using HTTP GET
-     * @param  {string} url         Resource url
-     * @param  {Object} options     Ajax options
-     * @return {Promise}            The Promise that resolves on ajax success
+     * Perform an ajax request using HTTP GET
+     *
+     * @example
+     * ATV.Ajax.get('http://api.mymovieapp.com/movies')
+     *         .then((response) => // do something with the response)
+     *         .catch((error) => // catch errors )
+     *
+     * @alias module:ajax.get
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
      */
     get(url, options) {
         return ajax(url, options, 'GET');
     },
     /**
-     * Perform an ajax ajax using HTTP POST
-     * @param  {string} url         Resource url
-     * @param  {Object} options     Ajax options
-     * @return {Promise}            The Promise that resolves on ajax success
+     * Perform an ajax request using HTTP POST
+     *
+     * @example
+     * ATV.Ajax.post('http://api.mymovieapp.com/movies', {data})
+     *         .then((response) => // do something with the response)
+     *         .catch((error) => // catch errors )
+     *
+     * @alias module:ajax.post
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
      */
     post(url, options) {
         return ajax(url, options, 'POST');
     },
     /**
-     * Perform an ajax ajax using HTTP PUT
-     * @param  {string} url         Resource url
-     * @param  {Object} options     Ajax options
-     * @return {Promise}            The Promise that resolves on ajax success
+     * Perform an ajax request using HTTP PUT
+     *
+     * @alias module:ajax.put
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
      */
     put(url, options) {
         return ajax(url, options, 'PUT');
     },
     /**
-     * Perform an ajax ajax using HTTP DELETE
-     * @param  {string} url         Resource url
-     * @param  {Object} options     Ajax options
-     * @return {Promise}            The Promise that resolves on ajax success
+     * Perform an ajax request using HTTP DELETE
+     *
+     * @alias module:ajax.del
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
      */
     del(url, options) {
         return ajax(url, options, 'DELETE');
@@ -114,6 +144,8 @@ Object.assign(ajax, {
 
 /**
  * A very minimalistic AJAX implementation that returns promise instead of relying in callbacks.
+ *
+ * @module ajax
  *
  * @author eMAD <emad.alam@yahoo.com>
  *

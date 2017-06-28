@@ -9,11 +9,7 @@ let loaderDoc = null;
 let errorDoc = null;
 let modalDoc = null;
 
-/**
- * Default options.
- *
- * @type {Object}
- */
+// default options
 let defaults = {
     templates: {
         status: {}
@@ -23,6 +19,8 @@ let defaults = {
 /**
  * Sets the default options for navigation.
  *
+ * @inner
+ * @alias module:navigation.setOptions
  * @param {Object} cfg The configuration object {defaults}
  */
 function setOptions(cfg = {}) {
@@ -33,6 +31,9 @@ function setOptions(cfg = {}) {
 
 /**
  * Get a loader document.
+ *
+ * @inner
+ * @alias module:navigation.getLoaderDoc
  *
  * @param  {String} message         Loading message
  * @return {Document}               A newly created loader document
@@ -46,6 +47,9 @@ function getLoaderDoc(message) {
 
 /**
  * Get an error document.
+ *
+ * @inner
+ * @alias module:navigation.getErrorDoc
  *
  * @param  {Object|String} message          Error page configuration or error message
  * @return {Document}                       A newly created error document
@@ -67,6 +71,8 @@ function getErrorDoc(message) {
 
 /**
  * Gets the topmost document from the navigationDocument stack
+ *
+ * @private
  *
  * @return {Document} The document
  */
@@ -101,6 +107,8 @@ function initMenu() {
 /**
  * Helper function to perform navigation after applying the page level default handlers
  *
+ * @private
+ *
  * @param  {Object} cfg         The configurations
  * @return {Document}           The created document
  */
@@ -130,6 +138,9 @@ function show(cfg = {}) {
  * Shows a loading page if a loader template exists.
  * Also applies any default handlers and caches the document for later use.
  *
+ * @inner
+ * @alias module:navigation.showLoading
+ *
  * @param  {Object|Function} cfg    The configuration options or the template function
  * @return {Document}               The created loader document.
  */
@@ -158,6 +169,9 @@ function showLoading(cfg = {}) {
 /**
  * Shows the error page using the existing error template.
  * Also applies any default handlers and caches the document for later use.
+ *
+ * @inner
+ * @alias module:navigation.showError
  *
  * @param  {Object|Function|Boolean} cfg    The configuration options or the template function or boolean to hide the error
  * @return {Document}                       The created error document.
@@ -191,6 +205,7 @@ function showError(cfg = {}) {
  * Pushes a given document to the navigation stack after applying all the default page level handlers.
  *
  * @private
+ *
  * @param  {Document} doc       The document to push to the navigation stack
  */
 function pushDocument(doc) {
@@ -205,7 +220,9 @@ function pushDocument(doc) {
  * Replaces a document on the navigation stack with the provided new document.
  * Also adds the page level default handlers to the new document and removes the existing handlers from the document that is to be replaced.
  *
- * @private
+ * @inner
+ * @alias module:navigation.replaceDocument
+ *
  * @param  {Document} doc               The document to push
  * @param  {Document} docToReplace      The document to replace
  */
@@ -219,6 +236,8 @@ function replaceDocument(doc, docToReplace) {
 
 /**
  * Performs a navigation by checking the existing document stack to see if any error or loader page needs to be replaced from the current stack
+ *
+ * @private
  *
  * @param   {Document} doc              The document that needs to be pushed on to the navigation stack
  * @param   {Boolean} [replace=false]   Whether to replace the last document from the navigation stack
@@ -254,6 +273,9 @@ function cleanNavigate(doc, replace = false) {
 /**
  * Navigates to the menu page if it exists
  *
+ * @inner
+ * @alias module:navigation.navigateToMenuPage
+ *
  * @return {Promise}      Returns a Promise that resolves upon successful navigation.
  */
 function navigateToMenuPage() {
@@ -276,6 +298,9 @@ function navigateToMenuPage() {
 
 /**
  * Navigates to the provided page if it exists in the list of available pages.
+ *
+ * @inner
+ * @alias module:navigation.navigate
  *
  * @param  {String} page        Name of the previously created page.
  * @param  {Object} options     The options that will be passed on to the page during runtime.
@@ -355,6 +380,9 @@ function navigate(page, options, replace) {
 /**
  * Shows a modal. Closes the previous modal before showing a new modal.
  *
+ * @inner
+ * @alias module:navigation.presentModal
+ *
  * @param  {Document|String|Object} modal       The TVML string/document representation of the modal window or a configuration object to create modal from
  * @return {Document}                           The created modal document
  */
@@ -373,6 +401,8 @@ function presentModal(modal) {
 /**
  * Dismisses the current modal window.
  *
+ * @inner
+ * @alias module:navigation.dismissModal
  */
 function dismissModal() {
     navigationDocument.dismissModal();
@@ -382,6 +412,8 @@ function dismissModal() {
 /**
  * Clears the navigation stack.
  *
+ * @inner
+ * @alias module:navigation.clear
  */
 function clear() {
     loaderDoc = null;
@@ -391,6 +423,9 @@ function clear() {
 
 /**
  * Pops the recent document or pops all document before the provided document.
+ *
+ * @inner
+ * @alias module:navigation.pop
  *
  * @param  {Document} [doc]     The document until which we need to pop.
  */
@@ -405,6 +440,8 @@ function pop(doc) {
 /**
  * Goes back in history.
  *
+ * @inner
+ * @alias module:navigation.back
  */
 function back() {
     if (getLastDocumentFromStack()) {
@@ -415,6 +452,8 @@ function back() {
 /**
  * Removes the current active document from the stack.
  *
+ * @inner
+ * @alias module:navigation.removeActiveDocument
  */
 function removeActiveDocument() {
     let doc = getActiveDocument();
@@ -424,68 +463,38 @@ function removeActiveDocument() {
 /**
  * A minimalistic Navigation library for Apple TV applications
  *
+ * @module navigation
+ *
  * @author eMAD <emad.alam@yahoo.com>
  *
  */
 export default {
+    /**
+     * Returns the topmost document from the navigation stack.
+     * @return {Document} TVML Document
+     */
     get currentDocument() { return getLastDocumentFromStack(); },
     set currentDocument(doc) { },
+    /**
+     * Returns the current active document presented on the UI.
+     *
+     * Note: This is just a wrapper to the TVMLKit JS [getActiveDocument]{@linkcode https://developer.apple.com/documentation/tvmljs/1627314-getactivedocument} method.
+     * @return {Document} TVML Document
+     */
     get activeDocument() { return getActiveDocument(); },
     set activeDocument(doc) { },
-    /**
-     * @type {setOptions}
-     */
     setOptions: setOptions,
-    /**
-     * @type {navigate}
-     */
     navigate: navigate,
-    /**
-     * @type {navigateToMenuPage}
-     */
     navigateToMenuPage: navigateToMenuPage,
-    /**
-     * @type {getLoaderDoc}
-     */
     getLoaderDoc: getLoaderDoc,
-    /**
-     * @type {getErrorDoc}
-     */
     getErrorDoc: getErrorDoc,
-    /**
-     * @type {showLoading}
-     */
     showLoading: showLoading,
-    /**
-     * @type {showError}
-     */
     showError: showError,
-    /**
-     * @type {presentModal}
-     */
     presentModal: presentModal,
-    /**
-     * @type {dismissModal}
-     */
     dismissModal: dismissModal,
-    /**
-     * @type {clear}
-     */
     clear: clear,
-    /**
-     * @type {back}
-     */
     back: back,
-    /**
-     * @type {pop}
-     */
     pop: pop,
-    /**
-     * @type {removeActiveDocument}
-     */
     removeActiveDocument: removeActiveDocument,
-    /**
-     * @type {replaceDocument}
-     */
     replaceDocument: replaceDocument
 };
