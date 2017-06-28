@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ajax.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-ajax.html">ajax</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.ajax">ajax</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.del">del</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.post">post</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.put">put</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-ATV.html">ATV</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ATV.html#.reload">reload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ATV.html#.start">start</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-handler.html">handler</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.addAll">addAll</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.addListeners">addListeners</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.removeAll">removeAll</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.removeListeners">removeListeners</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.setOptions">setOptions</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-menu.html">menu</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.create">create</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.getErrorMessage">getErrorMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.getLoadingMessage">getLoadingMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.setDocument">setDocument</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.setOptions">setOptions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.setSelectedItem">setSelectedItem</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-navigation.html">navigation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.back">back</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.clear">clear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.dismissModal">dismissModal</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.getErrorDoc">getErrorDoc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.getLoaderDoc">getLoaderDoc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.navigate">navigate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.navigateToMenuPage">navigateToMenuPage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.pop">pop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.presentModal">presentModal</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.removeActiveDocument">removeActiveDocument</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.replaceDocument">replaceDocument</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.setOptions">setOptions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.showError">showError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.showLoading">showLoading</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-page.html">page</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.create">create</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.makeDom">makeDom</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.prepareDom">prepareDom</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.setOptions">setOptions</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-parser.html">parser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-parser.html#.dom">dom</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-settings.html">settings</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-settings.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-settings.html#.remove">remove</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-settings.html#.set">set</a></span></li><li class="nav-heading">Externals</li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-LZString.html">LZString</a></span></li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-pubsub-js.html">pubsub-js</a></span></li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-Settings.html">Settings</a></span></li><li class="nav-heading">Events</li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onError">onError</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onExit">onExit</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onLaunch">onLaunch</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onReload">onReload</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onResume">onResume</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onSuspend">onSuspend</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">ajax.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Default options for the ajax.
+ *
+ * @private
+ * @type {Object}
+ */
+const defaults = {
+    responseType: 'json'
+};
+
+/**
+ * A function to perform ajax requests. It returns promise instead of relying on callbacks.
+ *
+ * @example
+ * ATV.Ajax('http://api.mymovieapp.com/movies')
+ *     .then((response) => // do something with the response)
+ *     .catch((error) => // catch errors )
+ *
+ * @memberof module:ajax
+ * 
+ * @param  {String} url                                 Resource url
+ * @param  {Object} [options={responseType: 'json'}]    Options to apply for the ajax request
+ * @param  {String} [method='GET']                      Type of HTTP request (defaults to GET)
+ * @return {Promise}                                     The Promise that resolves on ajax success
+ */
+function ajax(url, options, method = 'GET') {
+    if (typeof url == 'undefined') {
+        console.error('No url specified for the ajax.');
+        throw new TypeError('A URL is required for making the ajax request.');
+    }
+
+    if (typeof options === 'undefined' &amp;&amp; typeof url === 'object' &amp;&amp; url.url) {
+        options = url;
+        url = options.url;
+    } else if (typeof url !== 'string') {
+        console.error('No url/options specified for the ajax.');
+        throw new TypeError('Options must be an object for making the ajax request.');
+    }
+
+    // default options
+    options = Object.assign({}, defaults, options, {method: method});
+
+    console.log(`initiating ajax request... url: ${url}`, ' :: options:', options);
+
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        // set response type
+        if (options.responseType) {
+            xhr.responseType = options.responseType;
+        }
+        // open connection
+        xhr.open(
+            options.method,
+            url,
+            typeof options.async === 'undefined' ? true : options.async,
+            options.user,
+            options.password
+        );
+        // set headers
+        Object.keys(options.headers || {}).forEach(function(name) {
+            xhr.setRequestHeader(name, options.headers[name]);
+        });
+        // listen to the state change
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+
+            if (xhr.status >= 200 &amp;&amp; xhr.status &lt;= 300) {
+                resolve(xhr);
+            } else {
+                reject(xhr);
+            }
+        };
+        // error handling
+        xhr.addEventListener('error', () => reject(xhr));
+        xhr.addEventListener('abort', () => reject(xhr));
+        // send request
+        xhr.send(options.data);
+    });
+}
+
+Object.assign(ajax, {
+    /**
+     * Perform an ajax request using HTTP GET
+     *
+     * @example
+     * ATV.Ajax.get('http://api.mymovieapp.com/movies')
+     *         .then((response) => // do something with the response)
+     *         .catch((error) => // catch errors )
+     *
+     * @alias module:ajax.get
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
+     */
+    get(url, options) {
+        return ajax(url, options, 'GET');
+    },
+    /**
+     * Perform an ajax request using HTTP POST
+     *
+     * @example
+     * ATV.Ajax.post('http://api.mymovieapp.com/movies', {data})
+     *         .then((response) => // do something with the response)
+     *         .catch((error) => // catch errors )
+     *
+     * @alias module:ajax.post
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
+     */
+    post(url, options) {
+        return ajax(url, options, 'POST');
+    },
+    /**
+     * Perform an ajax request using HTTP PUT
+     *
+     * @alias module:ajax.put
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
+     */
+    put(url, options) {
+        return ajax(url, options, 'PUT');
+    },
+    /**
+     * Perform an ajax request using HTTP DELETE
+     *
+     * @alias module:ajax.del
+     *
+     * @param  {string} url                         Resource url
+     * @param  {Object} [options={@link defaults}]  Ajax options
+     * @return {Promise}                            The Promise that resolves on ajax success
+     */
+    del(url, options) {
+        return ajax(url, options, 'DELETE');
+    }
+});
+
+/**
+ * A very minimalistic AJAX implementation that returns promise instead of relying in callbacks.
+ *
+ * @module ajax
+ *
+ * @author eMAD &lt;emad.alam@yahoo.com>
+ *
+ */
+export default ajax;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Jun 29 2017 01:23:44 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
