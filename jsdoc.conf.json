@@ -1,18 +1,18 @@
 {
-	"source": {
-		"include": ["./src/", "./README.md", "package.json"]
-	},
-	"templates": {
+    "source": {
+        "include": ["./src/", "./README.md", "package.json"]
+    },
+    "templates": {
         "cleverLinks": false,
         "monospaceLinks": true,
         "useLongnameInNav": true,
         "showInheritedInNav": true
     },
-	"opts": {
-		"destination": "./docs/",
-		"encoding": "utf8",
+    "opts": {
+        "destination": "./docs/",
+        "encoding": "utf8",
         "private": false,
         "recurse": true,
         "template": "./node_modules/minami"
-	}
+    }
 }
