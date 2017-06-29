@@ -7,6 +7,8 @@
 
 # atvjs
 
+[![Join the chat at https://gitter.im/atvjs/Lobby](https://badges.gitter.im/atvjs/Lobby.svg)](https://gitter.im/atvjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Blazing fast Apple TV application development using pure JavaScript.
 
 <!-- MarkdownTOC depth=4 autolink=true autoanchor=true bracket=round -->
