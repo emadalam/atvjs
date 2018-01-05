@@ -93,7 +93,7 @@ function addItem(item = {}) {
 }
 
 /**
- * Generates a menu from the configuration obejct.
+ * Generates a menu from the configuration object.
  *
  * @example
  * ATV.Menu.create({
