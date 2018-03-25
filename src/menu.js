@@ -10,12 +10,14 @@ let created = false;
 // few private instances
 let doc = Parser.dom(docStr);
 let menuBarEl = (doc.getElementsByTagName('menuBar')).item(0);
+let menuBarTpl = (doc.getElementsByTagName('menuBarTemplate')).item(0);
 let menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
 let itemsCache = {};
 
 // default menu options
 let defaults = {
     attributes: {},
+    rootTemplateAttributes: {},
     items: []
 };
 
@@ -97,7 +99,8 @@ function addItem(item = {}) {
  *
  * @example
  * ATV.Menu.create({
- *     attributes: {},
+ *     attributes: {},  // menuBar attributes
+ *     rootTemplateAttributes: {}, // menuBarTemplate attributes
  *     items: [{
  *         id: 'search',
  *         name: 'Search',
@@ -138,6 +141,8 @@ function create(cfg = {}) {
     
     // set attributes to the menubar element
     setAttributes(menuBarEl, defaults.attributes);
+    // set attributes to the menubarTemplate element
+    setAttributes(menuBarTpl, defaults.rootTemplateAttributes);
     // add all items to the menubar
     _.each(defaults.items, (item) => addItem(item));
     // indicate done
