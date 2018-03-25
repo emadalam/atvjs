@@ -23295,12 +23295,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	// few private instances
 	var doc = _parser2.default.dom(docStr);
 	var menuBarEl = doc.getElementsByTagName('menuBar').item(0);
+	var menuBarTpl = doc.getElementsByTagName('menuBarTemplate').item(0);
 	var menuBarFeature = menuBarEl && menuBarEl.getFeature('MenuBarDocument');
 	var itemsCache = {};
 
 	// default menu options
 	var defaults = {
 	    attributes: {},
+	    attributesTpl: {},
 	    items: []
 	};
 
@@ -23388,7 +23390,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * ATV.Menu.create({
-	 *     attributes: {},
+	 *     attributes: {},  // menuBar attributes
+	 *     attributesTpl: {}, // menuBarTemplate attributes
 	 *     items: [{
 	 *         id: 'search',
 	 *         name: 'Search',
@@ -23431,6 +23434,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // set attributes to the menubar element
 	    setAttributes(menuBarEl, defaults.attributes);
+	    // set attributes to the menubarTemplate element
+	    setAttributes(menuBarTpl, defaults.attributesTpl);
 	    // add all items to the menubar
 	    _lodash2.default.each(defaults.items, function (item) {
 	        return addItem(item);
