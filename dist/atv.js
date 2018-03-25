@@ -23302,7 +23302,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// default menu options
 	var defaults = {
 	    attributes: {},
-	    attributesTpl: {},
+	    rootTemplateAttributes: {},
 	    items: []
 	};
 
@@ -23391,7 +23391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * ATV.Menu.create({
 	 *     attributes: {},  // menuBar attributes
-	 *     attributesTpl: {}, // menuBarTemplate attributes
+	 *     rootTemplateAttributes: {}, // menuBarTemplate attributes
 	 *     items: [{
 	 *         id: 'search',
 	 *         name: 'Search',
@@ -23435,7 +23435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // set attributes to the menubar element
 	    setAttributes(menuBarEl, defaults.attributes);
 	    // set attributes to the menubarTemplate element
-	    setAttributes(menuBarTpl, defaults.attributesTpl);
+	    setAttributes(menuBarTpl, defaults.rootTemplateAttributes);
 	    // add all items to the menubar
 	    _lodash2.default.each(defaults.items, function (item) {
 	        return addItem(item);

@@ -295,8 +295,10 @@ let TVShowsPage = ATV.Page.create({/* page configurations */});
 
 // create menu page
 ATV.Menu.create({
-	// any attributes that you want to set on the root level menuBar element of TVML
+	// any attributes that you want to set on the menuBar element of TVML
 	attributes: {},
+	// any attributes that you want to set on the root level menuBarTemplate element of TVML
+	rootTemplateAttributes {},
 	// array of menu item configurations
 	items: [{
 		id: 'search',

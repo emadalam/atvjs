@@ -17,7 +17,7 @@ let itemsCache = {};
 // default menu options
 let defaults = {
     attributes: {},
-    attributesTpl: {},
+    rootTemplateAttributes: {},
     items: []
 };
 
@@ -100,7 +100,7 @@ function addItem(item = {}) {
  * @example
  * ATV.Menu.create({
  *     attributes: {},  // menuBar attributes
- *     attributesTpl: {}, // menuBarTemplate attributes
+ *     rootTemplateAttributes: {}, // menuBarTemplate attributes
  *     items: [{
  *         id: 'search',
  *         name: 'Search',
@@ -142,7 +142,7 @@ function create(cfg = {}) {
     // set attributes to the menubar element
     setAttributes(menuBarEl, defaults.attributes);
     // set attributes to the menubarTemplate element
-    setAttributes(menuBarTpl, defaults.attributesTpl);
+    setAttributes(menuBarTpl, defaults.rootTemplateAttributes);
     // add all items to the menubar
     _.each(defaults.items, (item) => addItem(item));
     // indicate done
