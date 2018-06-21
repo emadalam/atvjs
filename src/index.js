@@ -78,7 +78,49 @@ let libs = {
      * @alias module:ATV.Menu
      * @type {module:menu}
      */
-    Menu: Menu
+    Menu: Menu,
+    /**
+     * Create a page that can be later used for navigation.
+     * This is an alias of ATV.Page.create 
+     * @param  {String|Object} name     Name of the page or the configuration options
+     * @param  {Object} cfg             Page configuration options
+     * @return {Function}               A function that returns promise upon execution
+     */
+    createPage: Page.create,
+    /**
+     * Generates a menu from the configuration object.
+     * This is an alias of ATV.Menu.create 
+     * @param  {Object} cfg 		Menu related configurations
+     * @return {Document}     		The created menu document
+     */
+    createMenu: Menu.create,
+    /**
+     * Navigates to the provided page if it exists in the list of available pages.
+     * This is an alias of ATV.Navigation.navigate 
+     * @param  {String} page        Name of the previously created page.
+     * @param  {Object} options     The options that will be passed on to the page during runtime.
+     * @param  {Boolean} replace    Replace the previous page.
+     * @return {Promise}            Returns a Promise that resolves upon successful navigation.
+     */
+    navigateTo: Navigation.navigate,
+    /**
+     * Navigates to the menu page if it exists
+     * This is an alias of ATV.Navigation.navigateToMenuPage 
+     * @return {Promise}      Returns a Promise that resolves upon successful navigation.
+     */
+    navigateToMenuPage: Navigation.navigateToMenuPage,
+    /**
+     * Shows a modal. Closes the previous modal before showing a new modal.
+     * This is an alias of ATV.Navigation.presentModal 
+     * @param  {Document|String|Object} modal       The TVML string/document representation of the modal window or a configuration object to create modal from
+     * @return {Document}                           The created modal document
+     */
+    presentModal: Navigation.presentModal,
+    /**
+     * Dismisses the current modal window.
+     * This is an alias of ATV.Navigation.dismissModal 
+     */
+    dismissModal: Navigation.dismissModal
 };
 
 /**
