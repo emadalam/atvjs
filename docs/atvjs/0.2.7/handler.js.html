@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>handler.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-ajax.html">ajax</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.ajax">ajax</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.del">del</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.post">post</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ajax.html#.put">put</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-ATV.html">ATV</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ATV.html#.reload">reload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-ATV.html#.start">start</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-handler.html">handler</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.addAll">addAll</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.addListeners">addListeners</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.removeAll">removeAll</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.removeListeners">removeListeners</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-handler.html#.setOptions">setOptions</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-menu.html">menu</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.create">create</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.getErrorMessage">getErrorMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.getLoadingMessage">getLoadingMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.setDocument">setDocument</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.setOptions">setOptions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-menu.html#.setSelectedItem">setSelectedItem</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-navigation.html">navigation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.back">back</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.clear">clear</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.dismissModal">dismissModal</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.getErrorDoc">getErrorDoc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.getLoaderDoc">getLoaderDoc</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.navigate">navigate</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.navigateToMenuPage">navigateToMenuPage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.pop">pop</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.presentModal">presentModal</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.removeActiveDocument">removeActiveDocument</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.replaceDocument">replaceDocument</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.setOptions">setOptions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.showError">showError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-navigation.html#.showLoading">showLoading</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-page.html">page</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.create">create</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.makeDom">makeDom</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.prepareDom">prepareDom</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-page.html#.setOptions">setOptions</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-parser.html">parser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-parser.html#.dom">dom</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-settings.html">settings</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-settings.html#.get">get</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-settings.html#.remove">remove</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-settings.html#.set">set</a></span></li><li class="nav-heading">Externals</li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-LZString.html">LZString</a></span></li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-pubsub-js.html">pubsub-js</a></span></li><li class="nav-heading"><span class="nav-item-type type-external">E</span><span class="nav-item-name"><a href="external-Settings.html">Settings</a></span></li><li class="nav-heading">Events</li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onError">onError</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onExit">onExit</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onLaunch">onLaunch</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onReload">onReload</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onResume">onResume</a></span></li><li class="nav-heading"><span class="nav-item-type type-event">E</span><span class="nav-item-name"><a href="global.html#event:onSuspend">onSuspend</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">handler.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Navigation from './navigation';
+import Menu from './menu';
+
+// element level attribute that will be used for link to another pages
+const hrefAttribute = 'data-href-page';
+const hrefOptionsAttribute = 'data-href-page-options';
+const hrefPageReplaceAttribute = 'data-href-page-replace';
+const modalCloseBtnAttribute = 'data-alert-dissmiss';
+
+/**
+ * Page level default handlers.
+ *
+ * @private
+ * @type {Object&lt;Object&lt;Function>>}
+ */
+let handlers = {
+    /**
+     * All the handlers associated to the select event.
+     * @type {Object}
+     */
+    select: {
+        /**
+         * A handler to allow declaring anchors to other pages in the TVML templates.
+         *
+         * @example &lt;caption>A typical usage would be something like:&lt;/caption>
+         *     &lt;TVML TEMPLATE>
+         *         ...
+         *
+         *         &lt;lockup data-href-page="details" data-href-page-options="{id: 'MOVIE_ID'}">
+         *             ...
+         *         &lt;/lockup>
+         *
+         *         ...
+         *     &lt;/END TEMPLATE>
+         *     which will navigate to the details page with the provided options object
+         *
+         * @private
+         * @param  {Event} e    The event passed while this handler is invoked.
+         */
+        onLinkClick(e) {
+            let element = e.target;
+            let page = element.getAttribute(hrefAttribute);
+            let replace = element.getAttribute(hrefPageReplaceAttribute);
+
+            if (!page) return;
+
+            let options = element.getAttribute(hrefOptionsAttribute);
+            options = options || "{}";
+
+            // try to make the options object
+            try {
+                options = JSON.parse(options);
+            } catch (ex) {
+                console.warn(`Invalid value for the page options (${hrefOptionsAttribute}=${options}) in the template.`);
+                options = {};
+            }
+
+            Navigation.navigate(page, options, replace); // perform navigation
+        },
+        /**
+         * A handler that will allow declaring modal dismiss button in the TVML alert templates.
+         *
+         * @example &lt;caption>A typical usage would be something like:&lt;/caption>
+         *          
+         *          &lt;TVML ALERT TEMPLATE>
+         *              
+         *              ...
+         *
+         *              &lt;button data-alert-dissmiss="close">
+         *                  &lt;text>Cancel&lt;/text>
+         *              &lt;/button>
+         *              
+         *              ...
+         *              
+         *          &lt;/END TEMPLATE>
+         *
+         * @private
+         * @param  {Event} e    The event passed while this handler was invoked
+         */
+        onModalCloseBtnClick(e) {
+            let element = e.target;
+            let closeBtn = element.getAttribute(modalCloseBtnAttribute);
+
+            if (closeBtn) {
+                console.log('close button clicked within the modal, dismissing modal...');
+                Navigation.dismissModal();
+            }
+        },
+        /**
+         * Handler for menu navigation
+         *
+         * @private
+         * @param  {Event} e    The event passed while this handler was invoked
+         */
+        onMenuItemSelect(e) {
+            let element = e.target;
+            let menuId = element.getAttribute('id');
+            let elementType = element.nodeName.toLowerCase();
+            let page = element.page;
+
+            if (elementType === 'menuitem') {
+                // no need to proceed if the page is already loaded or there is no page definition present
+                if (!element.pageDoc &amp;&amp; page) {
+                    // set a loading message intially to the menuitem
+                    Menu.setDocument(Navigation.getLoaderDoc(Menu.getLoadingMessage()), menuId)
+                    // load the page
+                    page().then((doc) => {
+                        // if there is a document loaded, assign it to the menuitem
+                        if (doc) {
+                            // assign the pageDoc to disable reload everytime
+                            element.pageDoc = doc;
+                            Menu.setDocument(doc, menuId);    
+                        }
+                        // dissmiss any open modals
+                        Navigation.dismissModal();
+                    }, (error) => {
+                        // if there was an error loading the page, set an error page to the menu item
+                        Menu.setDocument(Navigation.getErrorDoc(error), menuId);
+                        // dissmiss any open modals
+                        Navigation.dismissModal();
+                    });
+                }
+            }
+        }
+    }
+};
+
+/**
+ * Sets the default handlers options
+ *
+ * @inner
+ * @alias module:handler.setOptions
+ *
+ * @param {Object} cfg The configuration object {defaults}
+ */
+function setOptions(cfg = {}) {
+    console.log('setting handler options...', cfg);
+    // override the default options
+    _.defaultsDeep(handlers, cfg.handlers);
+}
+
+/**
+ * Iterates over the events configuration and add event listeners to the document.
+ *
+ * @example
+ * {
+ *     events: {
+ *         'scroll': function(e) { // do the magic here },
+ *         'select listItemLockup title': 'onTitleSelect',
+ *         'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
+ *     },
+ *     onTitleSelect: function(e) {
+ *         // do the magic here
+ *     }
+ * }
+ *
+ * @todo Implement querySelectorAll polyfill (it doesn't seem to exist on the xml document)
+ *
+ * @private
+ *
+ * @param {Document} doc            The document to add the listeners on.
+ * @param {Object} cfg              The page object configuration.
+ * @param {Boolean} [add=true]      Whether to add or remove listeners. Defaults to true (add)
+ */
+function setListeners(doc, cfg = {}, add = true) {
+    if (!doc || !(doc instanceof Document)) {
+        return;
+    }
+
+    let listenerFn = doc.addEventListener;
+    if (!add) {
+        listenerFn = doc.removeEventListener;
+    }
+    if (_.isObject(cfg.events)) {
+        let events = cfg.events;
+        
+        _.each(events, (fns, e) => {
+            let [ev, selector] = e.split(' ');
+            let elements = null;
+            if (!_.isArray(fns)) { // support list of event handlers
+                fns = [fns];
+            }
+            if (selector) {
+                selector = e.substring(e.indexOf(' ') + 1); // everything after space
+                elements = _.attempt(() => doc.querySelectorAll(selector)); // catch any errors while document selection
+            } else {
+                elements = [doc];
+            }
+            elements = _.isError(elements) ? [] : elements;
+            _.each(fns, (fn) => {
+                fn = _.isString(fn) ? cfg[fn] : fn; // assume the function to be present on the page configuration obeject
+                if (_.isFunction(fn)) {
+                    console.log((add ? 'adding' : 'removing') + ' event on documents...', ev, elements);
+                    _.each(elements, (el) => listenerFn.call(el, ev, (e) => fn.call(cfg, e))); // bind to the original configuration object
+                }
+            });
+        })
+    }
+}
+
+/**
+ * Iterates over the events configuration and add event listeners to the document.
+ *
+ * @example
+ * ATV.Handler.addListeners(tvmlDoc,
+ * {
+ *     events: {
+ *         'scroll': function(e) { // do the magic here },
+ *         'select listItemLockup title': 'onTitleSelect',
+ *         'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
+ *     },
+ *     onTitleSelect: function(e) {
+ *         // do the magic here
+ *     }
+ * });
+ *
+ * @todo Implement querySelectorAll polyfill (it doesn't seem to exist on the xml document)
+ *
+ * @inner
+ * @alias module:handler.addListeners
+ *
+ * @param {Document} doc            The document to add the listeners on.
+ * @param {Object} cfg              The page object configuration.
+ */
+function addListeners(doc, cfg) {
+    setListeners(doc, cfg, true);
+}
+
+/**
+ * Iterates over the events configuration and remove event listeners from document.
+ *
+ * ATV.Handler.removeListeners(tvmlDoc,
+ * {
+ *     events: {
+ *         'scroll': function(e) { // do the magic here },
+ *         'select listItemLockup title': 'onTitleSelect',
+ *         'someOtherEvent': ['onTitleSelect', function(e) { // some other magic }, ...]
+ *     },
+ *     onTitleSelect: function(e) {
+ *         // do the magic here
+ *     }
+ * });
+ * 
+ * @todo Implement querySelectorAll polyfill (it doesn't seem to exist on the xml document)
+ *
+ * @inner
+ * @alias module:handler.removeListeners
+ *
+ * @param {Document} doc            The document to add the listeners on.
+ * @param {Object} cfg              The page object configuration.
+ */
+function removeListeners(doc, cfg) {
+    setListeners(doc, cfg, false);
+}
+
+/**
+ * Iterates over the list of page level default handlers and set/unset listeners on the provided document.
+ *
+ * @private
+ *
+ * @param {Document} doc            The document to set/unset listeners on.
+ * @param {Boolean} [add=true]      Whether to add or remove listeners. Defaults to true (add)
+ */
+function setDefaultHandlers(doc, add = true) {
+    if (!doc || !(doc instanceof Document)) {
+        return;
+    }
+
+    let listenerFn = doc.addEventListener;
+    if (!add) {
+        listenerFn = doc.removeEventListener;
+    }
+
+    // iterate over all the handlers and add it as an event listener on the doc
+    for (let name in handlers) {
+        for (let key in handlers[name]) {
+            listenerFn.call(doc, name, handlers[name][key]);
+        }
+    }
+}
+
+/**
+ * Syntactical sugar to {setDefaultHandlers} with add=true
+ *
+ * @private
+ *
+ * @param {Document} doc        The document to add the listeners on.
+ */
+function addDefaultHandlers(doc) {
+    setDefaultHandlers(doc, true);
+}
+
+/**
+ * Syntactical sugar to {setDefaultHandlers} with add=false
+ *
+ * @private
+ *
+ * @param {Document} doc        The document to add the listeners on.
+ */
+function removeDefaultHandlers(doc) {
+    setDefaultHandlers(doc, false);
+}
+
+/**
+ * Sets/unsets the event handlers as per the event configuration.
+ * Also adds/removes the [default page level handlers]{@link handlers}.
+ *
+ * @private
+ * 
+ * @param {Document}  doc           The page document.
+ * @param {Obejct}  cfg             Page configuration object
+ * @param {Boolean} [add=true]      Whether to add or remove the handlers
+ */
+function setHandlers(doc, cfg, add = true) {
+    if (add) {
+        addDefaultHandlers(doc);
+        addListeners(doc, cfg);    
+    } else {
+        removeDefaultHandlers(doc);
+        removeListeners(doc, cfg);
+    }
+}
+
+/**
+ * Sets the event handlers as per the event configuration.
+ * Also adds the [default page level handlers]{@link handlers}.
+ *
+ * @inner
+ * @alias module:handler.addAll
+ *
+ * @param {Document}  doc           The page document.
+ * @param {Obejct}  cfg             Page configuration object
+ */
+function addHandlers(doc, cfg) {
+    setHandlers(doc, cfg, true);
+}
+
+/**
+ * Unset the event handlers as per the event configuration.
+ * Also removes the [default page level handlers]{@link handlers}.
+ *
+ * @inner
+ * @alias module:handler.removeAll
+ *
+ * @param {Document}  doc           The page document.
+ * @param {Obejct}  cfg             Page configuration object
+ */
+function removeHandlers(doc, cfg) {
+    setHandlers(doc, cfg, false);
+}
+
+/**
+ * A minimalistic Event handling library for Apple TV applications
+ *
+ * @module handler
+ *
+ * @author eMAD &lt;emad.alam@yahoo.com>
+ *
+ */
+export default {
+    setOptions: setOptions,
+    addListeners: addListeners,
+    removeListeners: removeListeners,
+    addAll: addHandlers,
+    removeAll: removeHandlers
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Jun 21 2018 11:49:21 GMT+0200 (CEST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
