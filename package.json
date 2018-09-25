@@ -55,8 +55,8 @@
     "webpack-stream": "2.1.1"
   },
   "dependencies": {
-    "lodash": "3.10.1",
+    "lodash": "4.17.11",
     "lz-string": "1.4.4",
-    "pubsub-js": "1.5.3"
+    "pubsub-js": "1.7.0"
   }
 }
