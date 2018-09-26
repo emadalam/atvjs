@@ -28031,6 +28031,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var hrefOptionsAttribute = 'data-href-page-options';
 	var hrefPageReplaceAttribute = 'data-href-page-replace';
 	var modalCloseBtnAttribute = 'data-alert-dissmiss';
+	var menuItemReloadAttribute = 'reloadOnSelect';
 
 	/**
 	 * Page level default handlers.
@@ -28127,7 +28128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            if (elementType === 'menuitem') {
 	                // no need to proceed if the page is already loaded or there is no page definition present
-	                if (!element.pageDoc && page) {
+	                if ((!element.pageDoc || element.getAttribute(menuItemReloadAttribute)) && page) {
 	                    // set a loading message intially to the menuitem
 	                    _menu2.default.setDocument(_navigation2.default.getLoaderDoc(_menu2.default.getLoadingMessage()), menuId);
 	                    // load the page
