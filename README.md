@@ -309,7 +309,8 @@ ATV.Menu.create({
 		name: 'Home',
 		page: HomePage,
 		attributes: {
-			autoHighlight: true // auto highlight on navigate
+			autoHighlight: true, // auto highlight on navigate
+			reloadOnSelect: true // reloads page when selecting it, instead of loading from cache
 		}
 	}, {
 		id: 'movies',
