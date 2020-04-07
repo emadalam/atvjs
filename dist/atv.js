@@ -28030,7 +28030,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var hrefAttribute = 'data-href-page';
 	var hrefOptionsAttribute = 'data-href-page-options';
 	var hrefPageReplaceAttribute = 'data-href-page-replace';
-	var modalCloseBtnAttribute = 'data-alert-dissmiss';
+	var modalCloseBtnAttribute = 'data-alert-dismiss';
 	var menuItemReloadAttribute = 'reloadOnSelect';
 
 	/**
@@ -28093,7 +28093,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *              
 	         *              ...
 	         *
-	         *              <button data-alert-dissmiss="close">
+	         *              <button data-alert-dismiss="close">
 	         *                  <text>Cancel</text>
 	         *              </button>
 	         *              
@@ -28139,12 +28139,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            element.pageDoc = doc;
 	                            _menu2.default.setDocument(doc, menuId);
 	                        }
-	                        // dissmiss any open modals
+	                        // dismiss any open modals
 	                        _navigation2.default.dismissModal();
 	                    }, function (error) {
 	                        // if there was an error loading the page, set an error page to the menu item
 	                        _menu2.default.setDocument(_navigation2.default.getErrorDoc(error), menuId);
-	                        // dissmiss any open modals
+	                        // dismiss any open modals
 	                        _navigation2.default.dismissModal();
 	                    });
 	                }

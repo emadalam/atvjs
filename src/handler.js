@@ -5,7 +5,7 @@ import Menu from './menu';
 const hrefAttribute = 'data-href-page';
 const hrefOptionsAttribute = 'data-href-page-options';
 const hrefPageReplaceAttribute = 'data-href-page-replace';
-const modalCloseBtnAttribute = 'data-alert-dissmiss';
+const modalCloseBtnAttribute = 'data-alert-dismiss';
 const menuItemReloadAttribute = 'reloadOnSelect';
 
 /**
@@ -67,7 +67,7 @@ let handlers = {
          *              
          *              ...
          *
-         *              <button data-alert-dissmiss="close">
+         *              <button data-alert-dismiss="close">
          *                  <text>Cancel</text>
          *              </button>
          *              
@@ -112,12 +112,12 @@ let handlers = {
                             element.pageDoc = doc;
                             Menu.setDocument(doc, menuId);    
                         }
-                        // dissmiss any open modals
+                        // dismiss any open modals
                         Navigation.dismissModal();
                     }, (error) => {
                         // if there was an error loading the page, set an error page to the menu item
                         Menu.setDocument(Navigation.getErrorDoc(error), menuId);
-                        // dissmiss any open modals
+                        // dismiss any open modals
                         Navigation.dismissModal();
                     });
                 }
