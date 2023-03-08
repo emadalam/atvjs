@@ -47,16 +47,34 @@ You simply create your pages (views) by passing a bunch of configurations (name 
 
 <a name="whats-included"></a>
 ### What's included
-- Page, Menu and Modal Creation and Navigation `ATV.Page.create`, `ATV.Menu.create`, `ATV.Navigation.navigate`, `ATV.Navigation.navigateToMenuPage`, `ATV.Navigation.presentModal`
-- TVML styling capabilities (both global as well as individual page level)
-- Event handling (both global and for individual pages and elements)
-- Application level persistent data storage using localStorage with [lz-string compression](https://github.com/pieroxy/lz-string/) `ATV.Settings.set`,  `ATV.Settings.get`, `ATV.Settings.remove`
-- Ajax library using JavaScript Promises `ATV.Ajax`, `ATV.Ajax.get`, `ATV.Ajax.post`, `ATV.Ajax.put`, `ATV.Ajax.del`
-- Application level publish/subscribe using [PubSubJS](https://github.com/mroderick/PubSubJS) `ATV.subscribe`, `ATV.publish`, `ATV.unsubscribe`
-- Application initialization/reload using simple configurations `ATV.start`, `ATV.reload`
-- Global error handling
-- JavaScript `Promise` and other ES6 Features Polyfill using [babel](https://babeljs.io/docs/usage/polyfill/)
-- [lodash](https://lodash.com/) library as `ATV._`
+- `ATV.Page.create`: Allows for the creation of a new TVML page within the application.
+- `ATV.Menu.create`: Allows for the creation of a new TVML menu within the application.
+- `ATV.Navigation.navigate`: Navigates to a new page within the application.
+- `ATV.Navigation.navigateToMenuPage`: Navigates to a new menu page within the application.
+- `ATV.Navigation.presentModal`: Presents a modal view within the application.
+- TVML styling capabilities: Provides the ability to apply global and individual styling to TVML pages within the application.
+- Event handling: Allows for the handling of events on both a global level and individual pages/elements within the application.
+- `ATV.Settings.set`: Sets persistent data storage using localStorage with [lz-string compression](https://github.com/pieroxy/lz-string/).
+- `ATV.Settings.get`: Gets persistent data storage using localStorage with [lz-string compression](https://github.com/pieroxy/lz-string/).
+- `ATV.Settings.remove`: Removes persistent data storage using localStorage with [lz-string compression](https://github.com/pieroxy/lz-string/).
+- `ATV.Ajax`: Provides an Ajax library for making HTTP requests using JavaScript Promises.
+- `ATV.Ajax.get`: Makes a GET request using the Ajax library.
+- `ATV.Ajax.post`: Makes a POST request using the Ajax library.
+- `ATV.Ajax.put`: Makes a PUT request using the Ajax library.
+- `ATV.Ajax.del`: Makes a DELETE request using the Ajax library.
+- `ATV.subscribe`: Subscribes to application-level publish/subscribe using [PubSubJS](https://github.com/mroderick/PubSubJS).
+- `ATV.publish`: Publishes to application-level publish/subscribe using [PubSubJS](https://github.com/mroderick/PubSubJS).
+- `ATV.unsubscribe`: Unsubscribes from application-level publish/subscribe using [PubSubJS](https://github.com/mroderick/PubSubJS).
+- `ATV.start`: Initializes the application using a simple configuration.
+- `ATV.reload`: Reloads the application using a simple configuration.
+- Global error handling: Provides error handling on a global level for the application.
+- JavaScript Promise and other ES6 Features Polyfill using babel: Provides support for ES6 features using [PubSubJS](https://github.com/mroderick/PubSubJS).
+- [lodash](https://lodash.com/) library as ATV.: Uses the lodash library and exposes it as ATV. within the application.
+
+
+
+
+Regenerate response
 
 <a name="getting-started"></a>
 ### Getting Started
